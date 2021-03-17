@@ -57,4 +57,4 @@ If you have any questions about the piece's infrastructure, please contact Brand
 
 * Copyright
 
-Everything in this repository, except for the Ubuntu .deb files, are licensed under the GPLv3. Please see the LICENSE file included. We take no liability for any damage or otherwise adverse effects the files in this repository has on you. If you use anything in this repository, please credit Brandon Hale and Dan Tramte and include the LICENSE file.
+Everything in this repository, except for the Ubuntu .deb files, are licensed under the GPLv3. Please see the LICENSE file included. We take no liability for any damage or otherwise adverse effects the files in this repository has on you. The video score and processed audio samples are copyright 2019 Dan Tramte. If you use anything in this repository, please credit Brandon Hale and Dan Tramte and include the LICENSE file.
