@@ -6,54 +6,10 @@ This repository is a backup of the code of Dan Tramte's [[https://youtu.be/8WWrG
 
 This piece needs a couple of dependencies in order to function: 
 
-+--------+-----------+
-|pd-l2ork|A version  |
-|        |of pd-l2ork|
-|        |is required|
-|        |to run the |
-|        |patch. The |
-|        |version    |
-|        |used to    |
-|        |make the   |
-|        |patch was  |
-|        |pd-l2ork   |
-|        |1.0 for    |
-|        |Ubuntu     |
-|        |Linux      |
-|        |16.04.     |
-+--------+-----------+
-|qtractor|This is    |
-|        |used for   |
-|        |remembering|
-|        |some jack  |
-|        |routing and|
-|        |playing    |
-|        |back the   |
-|        |audio from |
-|        |the        |
-|        |conductor  |
-|        |machine.   |
-+--------+-----------+
-|xjadeo  |This is the|
-|        |program to |
-|        |play the   |
-|        |graphic    |
-|        |score, in  |
-|        |vdieo      |
-|        |format.    |
-+--------+-----------+
-|ffmpeg  |ffmpeg is  |
-|        |not        |
-|        |necessarily|
-|        |required,  |
-|        |but good to|
-|        |hvae for   |
-|        |reencoding |
-|        |the video  |
-|        |score, if  |
-|        |needed.    |
-+--------+-----------+
-
+| pd-l2ork | A version of pd-l2ork is required to run the patch. The version used to make the patch was pd-l2ork 1.0 for Ubuntu Linux 16.04. |
+| qtractor | This is used for remembering some jack routing and playing back the audio from the conductor machine.                            |
+| xjadeo   | This is the program to play the graphic score, in video format. |
+| ffmpeg   | ffmpeg is not necessarily required, but good to have for reencoding the video score, if needed.                                 |
 
 You will also need the other dependencies these packages need.
 
@@ -65,30 +21,11 @@ The laptops also need to run at 48khz sampling rate, as the backing track and qt
 
 The files have been left untouched from when they were used in L2ork. The code was made in pd-l2ork 1.0 on Ubuntu Linux 16.04. It is necessary to use pd-l2ork on Linux, as it is the only operating system that supports [disis_wiimote], the object used for Wiimote support. Here is an overview of the main files:
 
-+------------------+--------------+
-|tramteconductor.pd|Conductor     |
-|                  |patch, to     |
-|                  |run on the    |
-|                  |main          |
-|                  |conductor     |
-|                  |computer.     |
-+------------------+--------------+
-|tramte_lork.pd    |Performer     |
-|                  |patch, run    |
-|                  |by            |
-|                  |everyone      |
-|                  |else in       |
-|                  |the           |
-|                  |ensemble.     |
-+------------------+--------------+
-|tramte_rapper.pd  |Rapper patch, |
-|                  |used only by  |
-|                  |the rappers in|
-|                  |the piece.    |
-|                  |              |
-|                  |              |
-|                  |              |
-+------------------+--------------+
+
+|tramteconductor.pd| Conductor patch, to run on the main conductor computer. |
+|tramte_lork.pd    |Performer patch, run by everyone else in the ensemble. |
+|tramte_rapper.pd  |Rapper patch, used only by the rappers in the piece.                     |
+
 
 A conductor, performer, or rapper only needs to open their main patch. The patch will load any sub-patches that is needed. 
 
@@ -116,7 +53,7 @@ The infrastructure is ready for this occasion. You can load tramte_rapper.pd and
 
 * I Have Some Questions about the Infrastructure or Piece
 
-If you have any questions about the piece's infrastructure, please contact Brandon Hale at [[bthale.com]]. If you have questions about the composition of the piece, contact Dan Tramte at [[https://www.datramt.cool/home]].
+If you have any questions about the piece's infrastructure, please contact Brandon Hale at [[https://www.bthale.com]]. If you have questions about the composition of the piece, contact Dan Tramte at [[https://www.datramt.cool/home]].
 
 * Copyright
 
