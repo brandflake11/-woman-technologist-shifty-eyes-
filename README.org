@@ -29,7 +29,7 @@ The files have been left untouched from when they were used in L2ork. The code w
 
 A conductor, performer, or rapper only needs to open their main patch. The patch will load any sub-patches that is needed. 
 
-The video score used for the patch is [[./Works/Tramte/tramte-ioii/tramte_small.mp4]]. A higher resolution version is _not included_, as it is over github's file size limit: [[./Works/Tramte/tramte-ioii/wiicontrol-test-7.mov]]. This is the only file missing from the original L2ork files. The patch doesn't use this version though, as it takes *much longer* to load it into xjadeo in a performance setting.
+The video score used for the patch is [[./Works/Tramte/tramte-ioii/tramte_small.mp4][tramte_small.mp4]]. A higher resolution version is _not included_, as it is over github's file size limit: [[./Works/Tramte/tramte-ioii/wiicontrol-test-7.mov][wiicontrol-test-7.mov]]. This is the only file missing from the original L2ork files. The patch doesn't use this version though, as it takes *much longer* to load it into xjadeo in a performance setting.
 
 * Minimizing Feedback
 
@@ -39,9 +39,9 @@ pd-l2ork -> opens qtractor
 
 qtractor conductor audio file plays through -> pd-l2ork audio input -> and output to speakers
 
-This routing was used to help make it easier to control the audio file. The conductor can stay in pd-l2ork instead of having to manage qtractor as well. When you load the qtractor project file, all of the jack routing needed will be automatically loaded. There is one problem with this though: sometimes, your laptop mic is automatically routed with jack. In order to avoid feedback with this, you should turn down the laptop mic to 0% in alsamixer. [[./Works/Tramte/tramte-ioii/alsacontrols]] is an included script that can automatically apply this change. It was made for the L2ork laptops, so you will have to adjust it to fit your soundcard.
+This routing was used to help make it easier to control the audio file. The conductor can stay in pd-l2ork instead of having to manage qtractor as well. When you load the qtractor project file, all of the jack routing needed will be automatically loaded. There is one problem with this though: sometimes, your laptop mic is automatically routed with jack. In order to avoid feedback with this, you should turn down the laptop mic to 0% in alsamixer. [[./Works/Tramte/tramte-ioii/alsacontrols][alsacontrols]] is an included bash script that can automatically apply this change. It was made for the L2ork laptops, so you will have to adjust it to fit your soundcard.
 
-[[./Works/Tramte/tramte-ioii/tramte_rapper.pd]] also can have feedback issues, as it uses mic input to process and output the rapper vocals. Make sure to use a directional mic and face away from the speakers you use.
+[[./Works/Tramte/tramte-ioii/tramte_rapper.pd][tramte_rapper.pd]] also can have feedback issues, as it uses mic input to process and output the rapper vocals. Make sure to use a directional mic and face away from the speakers you use.
 
 * How Do the Computers Stay in Sync?
 
