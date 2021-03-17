@@ -45,7 +45,7 @@ This routing was used to help make it easier to control the audio file. The cond
 
 * How Do the Computers Stay in Sync?
 
-The computers for the laptop ensemble are kept in sync mostly with jack transport. The conductor patch sends messages to the other computers in the ensemble over the wired L2ork network. This controls the position of jack transport on all of the computers. xjadeo is used in combination with jack transport to show the video score. In theory, if all of the computers get all of the messages at the same time, then they will be in sync. At least, this was the idea when developing the patch. It may not work so well with an ensemble of different laptops and usb audio interfaces.
+The computers for the laptop ensemble are kept in sync with jack transport. The conductor patch sends messages to the other computers in the ensemble over the wired L2ork network. This controls the position of jack transport on all of the computers. xjadeo is used in combination with jack transport to show the video score. In theory, if all of the computers get all of the messages at the same time, then they will be in sync. At least, this was the idea when developing the patch. It may not work so well with an ensemble of different laptops and usb audio interfaces.
 
 * What if the Rappers Need to Hear the Backing Track?
 
