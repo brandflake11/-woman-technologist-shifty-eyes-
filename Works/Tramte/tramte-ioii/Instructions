@@ -1,0 +1,20 @@
+First
+Turn L2ork speaker off
+
+go into alsamixer
+f4
+turn down all mics
+
+Load Jack USB
+
+Load pd-l2ork with jack
+
+open trante_l2ork.pd
+
+open tramteconductor.pd
+
+Click load video and load audio toggles
+
+shift+1/2/3 
+
+Pull up audio gain

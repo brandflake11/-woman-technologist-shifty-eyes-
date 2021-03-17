@@ -1,0 +1,2364 @@
+#N struct NC-stick float x float y;
+#N struct IR-blobs float x float y symbol s;
+#N struct CL-L-stick float x float y;
+#N struct CL-R-stick float x float y;
+#N canvas 896 223 239 239 10;
+#X obj 41 24 cnv 15 230 231 empty empty empty 20 12 0 14 -232576 -66577
+0;
+#N canvas 47 14 1280 691 guts 0;
+#X obj 1165 -46 disis_wiimote;
+#N canvas 47 14 1203 589 wiimote 0;
+#X msg 7891 -12445 disconnect;
+#X msg 7912 -12746 discover;
+#X obj 8072 -12647 tgl 25 0 empty empty empty 17 7 0 10 -262144 -1
+-1 0 1;
+#X obj 7994 -12647 tgl 25 0 empty empty empty 17 7 0 10 -262144 -1
+-1 0 1;
+#X msg 8072 -12617 reportAcceleration \$1;
+#X msg 7994 -12617 reportIR \$1;
+#N canvas 47 23 700 644 \$0-accelerometer-stuff 0;
+#X obj 218 12 inlet;
+#X obj 366 221 unpack 0 0 0;
+#X obj 92 612 expr sqrt(pow($f1 \, 2) + pow($f2 \, 2) + pow($f3 \,
+2));
+#X obj 357 280 atan;
+#X obj 357 259 expr $f1 / $f2;
+#X obj 389 304 expr if ($f1 > 0 \, 3.14159 \, -3.14159);
+#X obj 357 331 pack 0 0 0;
+#X obj 357 353 expr if ($f3 <= 0 \, $f1 + $f2 \, $f1);
+#X obj 357 375 * -1;
+#X obj 328 61 unpack 0 0 0;
+#X obj 42 443 s \$0-wii-pitch-set;
+#X obj 357 445 s \$0-wii-roll-set;
+#X obj 407 81 s \$0-wii-accZ-set;
+#X obj 367 100 s \$0-wii-accY-set;
+#X obj 328 119 s \$0-wii-accX-set;
+#X text 75 514 The pitch and roll are only accurate if there are no
+extra accelerations due to hand movement. We can check if the total
+acceleration is close to gravity and only use pitch and roll in that
+case. The total acceleration is given by:;
+#X text 340 39 raw accerlation:;
+#X obj 31 221 unpack 0 0 0;
+#X obj 42 280 atan;
+#X obj 42 259 expr $f1 / $f2;
+#X obj 74 304 expr if ($f1 > 0 \, 3.14159 \, -3.14159);
+#X obj 42 331 pack 0 0 0;
+#X obj 42 353 expr if ($f3 <= 0 \, $f1 + $f2 \, $f1);
+#X obj 42 375 * -1;
+#X obj 225 578 unpack 0 0 0;
+#X connect 0 0 9 0;
+#X connect 0 0 17 0;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 1 0 5 0;
+#X connect 1 2 4 1;
+#X connect 1 2 6 2;
+#X connect 3 0 6 0;
+#X connect 4 0 3 0;
+#X connect 5 0 6 1;
+#X connect 6 0 7 0;
+#X connect 7 0 8 0;
+#X connect 8 0 11 0;
+#X connect 9 0 14 0;
+#X connect 9 1 13 0;
+#X connect 9 2 12 0;
+#X connect 17 1 19 0;
+#X connect 17 1 20 0;
+#X connect 17 2 19 1;
+#X connect 17 2 21 2;
+#X connect 18 0 21 0;
+#X connect 19 0 18 0;
+#X connect 20 0 21 1;
+#X connect 21 0 22 0;
+#X connect 22 0 23 0;
+#X connect 23 0 10 0;
+#X connect 24 0 2 0;
+#X connect 24 1 2 1;
+#X connect 24 2 2 2;
+#X restore 7932 -12347 pd \$0-accelerometer-stuff;
+#N canvas 0 0 652 563 \$0-IR-stuff 0;
+#X obj 134 18 inlet;
+#X obj 122 510 pointer;
+#X msg 122 488 traverse pd-IR-data \, next;
+#X obj 134 63 route 0 1 2 3;
+#X obj 23 482 unpack 0 0 0;
+#X floatatom 483 44 5 0 0 0 IR-Blob: - -, f 5;
+#X floatatom 522 44 5 0 0 0 - - -, f 5;
+#X floatatom 562 44 5 0 0 0 - - -, f 5;
+#X obj 15 533 set IR-blobs x y;
+#X obj 231 400 pointer;
+#X obj 132 372 unpack 0 0 0;
+#X obj 124 423 set IR-blobs x y;
+#X msg 231 378 traverse pd-IR-data \, next \, next;
+#X obj 231 357 loadbang;
+#X obj 122 467 loadbang;
+#X obj 320 289 pointer;
+#X obj 221 261 unpack 0 0 0;
+#X obj 213 312 set IR-blobs x y;
+#X obj 320 246 loadbang;
+#X msg 320 267 traverse pd-IR-data \, next \, next \, next;
+#X obj 380 177 pointer;
+#X obj 281 149 unpack 0 0 0;
+#X obj 273 200 set IR-blobs x y;
+#X obj 380 134 loadbang;
+#X msg 380 155 traverse pd-IR-data \, next \, next \, next \, next
+;
+#X connect 0 0 3 0;
+#X connect 1 0 8 2;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 3 1 10 0;
+#X connect 3 2 16 0;
+#X connect 3 3 21 0;
+#X connect 4 0 8 0;
+#X connect 4 1 8 1;
+#X connect 9 0 11 2;
+#X connect 10 0 11 0;
+#X connect 10 1 11 1;
+#X connect 12 0 9 0;
+#X connect 13 0 12 0;
+#X connect 14 0 2 0;
+#X connect 15 0 17 2;
+#X connect 16 0 17 0;
+#X connect 16 1 17 1;
+#X connect 18 0 19 0;
+#X connect 19 0 15 0;
+#X connect 20 0 22 2;
+#X connect 21 0 22 0;
+#X connect 21 1 22 1;
+#X connect 23 0 24 0;
+#X connect 24 0 20 0;
+#X restore 7962 -12368 pd \$0-IR-stuff;
+#X text 7974 -12746 <- Or you can try to automatically detect a wiimote.
+;
+#X obj 8210 -12647 tgl 25 0 empty empty empty 17 7 0 10 -262144 -1
+-1 0 1;
+#X text 8069 -12228 You can also specify the address as a creation
+argument:;
+#X text 8081 -12214 (make sure to enable discover mode before creation)
+;
+#N canvas 47 126 920 244 \$0-nunchuck-stuff 0;
+#X obj 559 61 inlet;
+#X obj 672 134 pointer;
+#X obj 672 91 loadbang;
+#X obj 559 96 unpack 0 0;
+#X obj 565 179 set NC-stick x y;
+#X obj 49 71 inlet;
+#X text 42 32 inlet #1: BUTTONS;
+#X text 294 35 inlet #2: ACCELERATION;
+#X obj 304 72 inlet;
+#X obj 304 105 unpack 0 0 0;
+#X obj 383 125 s \$0-nc-accZ-set;
+#X obj 343 144 s \$0-nc-accY-set;
+#X obj 304 163 s \$0-nc-accX-set;
+#X text 567 32 inlet #3: STICK;
+#X obj 49 117 s \$0-nc-btn-set;
+#X msg 672 112 traverse pd-NC-data \, next;
+#X connect 0 0 3 0;
+#X connect 1 0 4 2;
+#X connect 2 0 15 0;
+#X connect 3 0 4 0;
+#X connect 3 1 4 1;
+#X connect 5 0 14 0;
+#X connect 8 0 9 0;
+#X connect 9 0 12 0;
+#X connect 9 1 11 0;
+#X connect 9 2 10 0;
+#X connect 15 0 1 0;
+#X restore 7991 -12389 pd \$0-nunchuck-stuff;
+#X obj 8464 -12427 cnv 15 275 241 empty empty Expansion: 10 15 0 14
+-228992 -355 0;
+#X floatatom 8603 -12365 7 0 0 1 - #0-nc-accX-set #0-nc-accX, f 7
+;
+#X floatatom 8603 -12351 7 0 0 1 - #0-nc-accY-set #0-nc-accY, f 7
+;
+#X floatatom 8603 -12337 7 0 0 1 - #0-nc-accZ-set #0-nc-accZ, f 7
+;
+#X obj 8473 -12365 hsl 128 14 -1 1 0 0 \$0-nc-accX \$0-nc-accX-set
+X 4 8 0 10 -261681 -1 -1 0 1;
+#X obj 8473 -12351 hsl 128 14 -1 1 0 0 \$0-nc-accY \$0-nc-accY-set
+Y 4 8 0 10 -261681 -1 -1 0 1;
+#X obj 8473 -12337 hsl 128 14 -1 1 0 0 \$0-nc-accZ \$0-nc-accZ-set
+Z 4 8 0 10 -261681 -1 -1 0 1;
+#X obj 8608 -12303 nbx 3 16 -1e+37 1e+37 0 0 empty \$0-nc-btn-set empty
+-80 8 0 10 -261681 -1 -1 0 256 0;
+#X text 8469 -12381 Acceleration:;
+#N canvas 154 209 610 221 NC-stick 0;
+#X obj 39 34 struct NC-stick float x float y;
+#X obj 44 71 filledpolygon 900 20 0 5 -5 0 -20 -5 -5 -20 0 -5 5 0 20
+5 5 20 0;
+#X restore 8653 -12285 pd NC-stick;
+#X text 8599 -12321 Buttons:;
+#X text 8670 -12381 Stick:;
+#X obj 8464 -12828 cnv 15 275 400 empty empty Wiimote: 10 15 0 14 -261689
+-143491 0;
+#X floatatom 8627 -12753 7 0 0 1 _X #0-wii-accX-set #0-wii-accX, f
+7;
+#X floatatom 8627 -12739 7 0 0 1 _Y #0-wii-accY-set #0-wii-accY, f
+7;
+#X floatatom 8627 -12725 7 0 0 1 _Z #0-wii-accZ-set #0-wii-accZ, f
+7;
+#X obj 8497 -12753 hsl 128 14 -1 1 0 0 \$0-wii-accX \$0-wii-accX-set
+empty -2 -8 0 10 -225271 -1 -1 0 1;
+#X obj 8497 -12739 hsl 128 14 -1 1 0 0 \$0-wii-accY \$0-wii-accY-set
+empty -2 -8 0 10 -225271 -1 -1 0 1;
+#X obj 8497 -12725 hsl 128 14 -1 1 0 0 \$0-wii-accZ \$0-wii-accZ-set
+empty -2 -8 0 10 -225271 -1 -1 0 1;
+#N canvas 506 128 481 416 IR-data 0;
+#X scalar IR-blobs 262.603 259.077 blob1 \;;
+#X scalar IR-blobs 383.441 388.308 blob2 \;;
+#X scalar IR-blobs 623.665 511.615 blob3 \;;
+#X scalar IR-blobs 821.362 457.231 blob4 \;;
+#X coords 0 0 1024 768 256 196 1;
+#X restore 8475 -12650 pd IR-data;
+#N canvas 136 244 342 204 IR-blobs 0;
+#X obj 39 34 struct IR-blobs float x float y symbol s;
+#X obj 39 71 filledcurve 9 30 0 0 -30 -30 0 0 30 30 0;
+#X obj 64 105 drawsymbol s -35 -75 0 24;
+#X restore 8661 -12449 pd IR-blobs;
+#X text 8533 -12667 IR Blobs (1024x768):;
+#X floatatom 8627 -12705 7 0 0 1 _PITCH #0-wii-pitch-set #0-wii-pitch
+, f 7;
+#X obj 8497 -12705 hsl 128 14 -3.14156 3.14159 0 0 \$0-wii-pitch \$0-wii-pitch-set
+empty -2 -8 0 10 -225280 -1 -1 0 1;
+#X floatatom 8627 -12691 7 0 0 1 _ROLL #0-wii-roll-set #0-wii-roll
+, f 7;
+#X obj 8497 -12691 hsl 128 14 -3.14156 3.14159 0 0 \$0-wii-roll \$0-wii-roll-set
+empty -2 -8 0 10 -225280 -1 -1 0 1;
+#X text 8493 -12769 Acceleration (-1 to 1):;
+#X obj 8664 -12810 nbx 2 16 -1e+37 1e+37 0 0 empty \$0-wii-btn01-set
+empty -100 10 0 12 -225280 -1 -1 0 256 0;
+#X obj 8699 -12810 nbx 2 16 -1e+37 1e+37 0 0 empty \$0-wii-btn02-set
+empty 0 10 0 12 -225280 -1 -1 0 256 0;
+#N canvas 0 0 330 216 \$0-button-stuff 0;
+#X obj 41 33 inlet;
+#X obj 41 86 unpack 0 0;
+#X obj 41 140 s \$0-wii-btn01-set;
+#X obj 106 120 s \$0-wii-btn02-set;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 3 0;
+#X restore 7906 -12327 pd \$0-button-stuff;
+#X text 8668 -12828 Buttons:;
+#N canvas 185 133 481 416 NC-data 0;
+#X scalar NC-stick 127 128 \;;
+#X coords 0 256 256 0 80 80 1 0 0;
+#X restore 8653 -12365 pd NC-data;
+#X obj 7876 -12210 print;
+#X obj 7900 -12630 tgl 25 0 empty empty empty 17 7 0 10 -262144 -1
+-1 0 1;
+#X text 7883 -12579 Enable metro to get accelerometer uppdates;
+#X obj 8002 -12468 disis_wiimote;
+#X obj 7876 -12232 disis_wiimote 00:19:1D:BE:6A:66;
+#X obj 8116 -12500 tgl 25 0 empty empty empty 17 7 0 10 -262144 -1
+-1 0 1;
+#X text 8097 -12476 connection;
+#X text 8102 -12466 indicator;
+#X text 8163 -12369 TO CONNECT:;
+#X text 8164 -12357 1 click on connect or discover;
+#X text 8164 -12306 3 upon connect wiimote will vibrate;
+#X text 8175 -12295 if wiimote fails to connect check;
+#X text 8176 -12273 (e.g. using shell command "hcitool scan");
+#X obj 8308 -12593 cnv 15 150 150 empty empty Feedback 6 12 0 10 -233017
+-66577 0;
+#X obj 8364 -12497 tgl 25 0 empty empty empty 17 7 0 10 -262144 -1
+-1 0 1;
+#X msg 8364 -12467 setRumble \$1;
+#X msg 8363 -12520 setLED \$1;
+#X obj 8363 -12569 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1
+-1 0 1;
+#X obj 8386 -12569 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1
+-1 0 1;
+#X obj 8409 -12569 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1
+-1 0 1;
+#X obj 8432 -12569 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1
+-1 0 1;
+#X text 8325 -12570 LEDs:;
+#N canvas 0 0 409 401 bytemask 0;
+#X obj 269 332 outlet;
+#X obj 269 279 float;
+#X obj 318 183 |;
+#X obj 110 239 -;
+#X obj 110 204 float;
+#X obj 110 184 trigger bang float;
+#X obj 231 204 &;
+#X obj 183 142 route 0 1;
+#X msg 36 56 \$1 1;
+#X msg 106 56 \$1 2;
+#X msg 176 56 \$1 4;
+#X msg 246 56 \$1 8;
+#X obj 36 15 inlet;
+#X obj 106 15 inlet;
+#X obj 176 15 inlet;
+#X obj 246 15 inlet;
+#X obj 36 35 change;
+#X obj 106 35 change;
+#X obj 176 35 change;
+#X obj 246 35 change;
+#X connect 1 0 2 1;
+#X connect 1 0 4 1;
+#X connect 1 0 6 1;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 0;
+#X connect 5 1 6 0;
+#X connect 6 0 3 1;
+#X connect 7 0 5 0;
+#X connect 7 1 2 0;
+#X connect 8 0 7 0;
+#X connect 9 0 7 0;
+#X connect 10 0 7 0;
+#X connect 11 0 7 0;
+#X connect 12 0 16 0;
+#X connect 13 0 17 0;
+#X connect 14 0 18 0;
+#X connect 15 0 19 0;
+#X connect 16 0 8 0;
+#X connect 17 0 9 0;
+#X connect 18 0 10 0;
+#X connect 19 0 11 0;
+#X restore 8363 -12543 pd bytemask, f 12;
+#X text 8315 -12496 RUMBLE:;
+#X text 8164 -12261 4 start metro and enable "reportAcceleration";
+#X text 7883 -12539 NB: setting metro below 20 makes little sense as
+even at max rate I was unable to get more than 50 updates/second from
+the bluetooth stack.;
+#X text 7881 -12568 (buttons \, xyz wiimote \, xyz nunchuk \, ir).
+;
+#X obj 8470 -12263 unpack 0 0 0;
+#X obj 8543 -12240 hsl 180 15 0 16000 0 0 empty empty empty -2 -8 0
+10 -261681 -1 -1 0 1;
+#X obj 8543 -12225 hsl 180 15 0 16000 0 0 empty empty empty -2 -8 0
+10 -261681 -1 -1 0 1;
+#X obj 8543 -12210 hsl 180 15 0 16000 0 0 empty empty empty -2 -8 0
+10 -261681 -1 -1 0 1;
+#X text 8545 -12242 up/down;
+#X text 8544 -12212 left/right;
+#X text 8544 -12227 rotate around y axis (wrist);
+#X text 8164 -12250 5 connect nunchuk and enable "reportExtension"
+;
+#X text 8479 -12394 NUNCHUK;
+#X text 8471 -12280 MOTION PLUS;
+#X text 7871 -12831 Threaded implementation of Wiimote object by DISIS
+& L2Ork by Ivica Ico Bukvic <ico@vt.edu> <http://disis.music.vt.edu>
+<http://l2ork.music.vt.edu>;
+#X text 8004 -12711 By default \, the wiimote does not report acceleration
+data \, IR data \, or any data from an attached extension (eg \, nunchuck).
+You must specifically enable each reporting mode.;
+#X msg 8210 -12617 reportExpansion \$1;
+#N canvas 0 0 1143 249 unpack_messages 0;
+#X obj 181 15 inlet;
+#X obj 61 103 outlet;
+#X obj 105 103 outlet;
+#X obj 195 171 outlet;
+#X obj 256 171 outlet;
+#X obj 317 171 outlet;
+#X obj 195 148 route button acceleration stick;
+#X obj 390 148 route angle_rate low_speed;
+#X obj 390 171 outlet;
+#X obj 466 171 outlet;
+#X obj 555 171 outlet;
+#X obj 624 171 outlet;
+#X obj 693 171 outlet;
+#X obj 840 171 outlet;
+#X obj 912 171 outlet;
+#X obj 985 171 outlet;
+#X obj 1058 171 outlet;
+#X obj 1142 148 outlet;
+#X obj 840 148 route right_top right_bottom left_top left_bottom;
+#X obj 181 37 route button acceleration ir nunchuk motionplus classic
+balance battery;
+#X obj 149 103 outlet;
+#X obj 555 148 route left_stick right_stick button;
+#X connect 0 0 19 0;
+#X connect 6 0 3 0;
+#X connect 6 1 4 0;
+#X connect 6 2 5 0;
+#X connect 7 0 8 0;
+#X connect 7 1 9 0;
+#X connect 18 0 13 0;
+#X connect 18 1 14 0;
+#X connect 18 2 15 0;
+#X connect 18 3 16 0;
+#X connect 19 0 1 0;
+#X connect 19 1 2 0;
+#X connect 19 2 20 0;
+#X connect 19 3 6 0;
+#X connect 19 4 7 0;
+#X connect 19 5 21 0;
+#X connect 19 6 18 0;
+#X connect 19 7 17 0;
+#X connect 21 0 10 0;
+#X connect 21 1 11 0;
+#X connect 21 2 12 0;
+#X restore 8002 -12447 pd unpack_messages;
+#X text 8051 -12770 <- You can connect to a specific address;
+#X msg 7891 -12467 status;
+#X msg 7891 -12489 debug;
+#X floatatom 8202 -12424 5 0 0 0 - - -, f 5;
+#X floatatom 8202 -12406 5 0 0 0 - - -, f 5;
+#X floatatom 8168 -12424 5 0 0 0 - - -, f 5;
+#X floatatom 8168 -12406 5 0 0 0 - - -, f 5;
+#X floatatom 8276 -12426 5 0 0 0 - - -, f 5;
+#X text 8148 -12392 balance board (kg);
+#X text 8310 -12433 battery level;
+#X text 8308 -12421 (click on the status msg);
+#X obj 8276 -12405 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 8330 -12647 tgl 25 0 empty empty empty 17 7 0 10 -262144 -1
+-1 0 1;
+#X msg 8330 -12617 togglePassthrough \$1;
+#X msg 7889 -12769 connect 00:19:1D:CA:73:29;
+#X text 8176 -12284 console and your bluetooth settings;
+#N canvas 35 30 815 233 \$0-classic 0;
+#X obj 60 -19 inlet;
+#X obj 690 -17 inlet;
+#X text 47 -37 left stick;
+#X text 340 -37 right stick;
+#X text 684 -35 buttons;
+#N canvas 154 209 610 221 CL-L-stick 0;
+#X obj 39 34 struct CL-L-stick float x float y;
+#X obj 44 71 filledpolygon 900 8 0 2 -2 0 -8 -2 -2 -8 0 -2 2 0 8 2
+2 8 0;
+#X restore 59 173 pd CL-L-stick;
+#N canvas 185 133 481 416 CL-L-data 0;
+#X scalar CL-L-stick 32 30 \;;
+#X coords 0 60 60 0 80 80 1 0 0;
+#X restore 60 93 pd CL-L-data;
+#X obj 165 46 pointer;
+#X obj 165 3 loadbang;
+#X obj 60 47 unpack 0 0;
+#X obj 60 69 set CL-L-stick x y;
+#X msg 165 24 traverse pd-CL-L-data \, next;
+#X obj 357 -17 inlet;
+#X obj 462 47 pointer;
+#X obj 462 4 loadbang;
+#X obj 357 48 unpack 0 0;
+#X msg 462 25 traverse pd-CL-R-data \, next;
+#X obj 357 70 set CL-R-stick x y;
+#N canvas 476 329 610 221 CL-R-stick 0;
+#X obj 39 34 struct CL-R-stick float x float y;
+#X obj 44 71 filledpolygon 900 4 0 1 -1 0 -4 -1 -1 -4 0 -1 1 0 4 1
+1 4 0;
+#X restore 356 174 pd CL-R-stick;
+#X obj 690 3 unpack 0 0;
+#X floatatom 690 25 5 0 0 0 - - -, f 5;
+#X floatatom 747 25 5 0 0 0 - - -, f 5;
+#N canvas 185 133 481 416 CL-R-data 0;
+#X scalar CL-R-stick 15 15 \;;
+#X coords 0 30 30 0 80 80 1 0 0;
+#X restore 357 94 pd CL-R-data;
+#X connect 0 0 9 0;
+#X connect 1 0 19 0;
+#X connect 7 0 10 2;
+#X connect 8 0 11 0;
+#X connect 9 0 10 0;
+#X connect 9 1 10 1;
+#X connect 11 0 7 0;
+#X connect 12 0 15 0;
+#X connect 13 0 17 2;
+#X connect 14 0 16 0;
+#X connect 15 0 17 0;
+#X connect 15 1 17 1;
+#X connect 16 0 13 0;
+#X connect 19 0 20 0;
+#X connect 19 1 21 0;
+#X restore 8067 -12411 pd \$0-classic;
+#X text 8164 -12346 2 press 1&2 on the wiimote;
+#X obj 8177 -12329 cnv 15 279 28 empty empty empty 20 12 0 14 -259090
+-66577 0;
+#X text 8177 -12331 IMPORTANT! to connect new wiimoteplus you mustuse
+the pair button isnide the battery pack;
+#X obj 7883 -12679 inlet;
+#X obj 7752 -12616 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 7760 -12413 delay 3000;
+#X obj 7760 -12391 l2ork_wiimote_connect;
+#X obj 7778 -12577 inlet;
+#X obj 7900 -12599 metro 30;
+#X obj 8116 -12470 s wiimoteconnection;
+#X obj 8398 -12495 r rumbleme;
+#X connect 0 0 48 0;
+#X connect 1 0 48 0;
+#X connect 2 0 4 0;
+#X connect 3 0 5 0;
+#X connect 4 0 48 0;
+#X connect 5 0 48 0;
+#X connect 9 0 84 0;
+#X connect 46 0 111 0;
+#X connect 48 0 85 0;
+#X connect 48 1 50 0;
+#X connect 49 0 45 0;
+#X connect 50 0 3 0;
+#X connect 50 0 98 0;
+#X connect 50 0 46 0;
+#X connect 50 0 9 0;
+#X connect 50 0 2 0;
+#X connect 50 0 112 0;
+#X connect 50 0 62 0;
+#X connect 50 0 65 0;
+#X connect 50 0 64 0;
+#X connect 50 0 63 0;
+#X connect 59 0 60 0;
+#X connect 60 0 48 0;
+#X connect 61 0 48 0;
+#X connect 62 0 67 0;
+#X connect 63 0 67 1;
+#X connect 64 0 67 2;
+#X connect 65 0 67 3;
+#X connect 67 0 61 0;
+#X connect 72 0 73 0;
+#X connect 72 1 74 0;
+#X connect 72 2 75 0;
+#X connect 84 0 48 0;
+#X connect 85 0 42 0;
+#X connect 85 1 6 0;
+#X connect 85 2 7 0;
+#X connect 85 3 12 0;
+#X connect 85 4 12 1;
+#X connect 85 5 12 2;
+#X connect 85 6 72 0;
+#X connect 85 8 102 0;
+#X connect 85 9 102 1;
+#X connect 85 10 102 2;
+#X connect 85 11 89 0;
+#X connect 85 12 90 0;
+#X connect 85 13 91 0;
+#X connect 85 14 92 0;
+#X connect 85 15 93 0;
+#X connect 87 0 48 0;
+#X connect 88 0 48 0;
+#X connect 93 0 97 0;
+#X connect 98 0 99 0;
+#X connect 99 0 48 0;
+#X connect 100 0 48 0;
+#X connect 106 0 1 0;
+#X connect 107 0 108 0;
+#X connect 108 0 109 0;
+#X connect 109 0 48 0;
+#X connect 110 0 108 0;
+#X connect 111 0 48 0;
+#X connect 113 0 59 0;
+#X restore 1956 446 pd wiimote;
+#X obj 2021 398 bng 15 250 50 0 empty empty empty 17 7 0 10 -260097
+-1 -1;
+#X floatatom 1563 -3 5 0 0 0 - - -, f 5;
+#X obj 1563 18 & 1;
+#X obj 1563 40 > 0;
+#X obj 1563 -29 nbx 2 16 -1e+37 1e+37 0 0 empty \$0-wii-btn01-set empty
+-100 10 0 12 -225280 -1 -1 0 256 0;
+#X obj 1640 -27 nbx 12 16 -1e+37 1e+37 0 0 empty \$0-wii-btn02-set
+empty 0 10 0 12 -225280 -1 -1 0 256 0;
+#X floatatom 1639 -1 5 0 0 0 - - -, f 5;
+#X obj 1639 42 > 0;
+#X obj 1639 20 & 4;
+#X floatatom 1645 102 5 0 0 0 - - -, f 5;
+#N canvas 404 154 789 521 dacc 0;
+#X obj 390 196 ggee/image @pd_extra/K12/objects/audio_on.png 1;
+#X obj 207 33 inlet~;
+#N canvas 316 207 286 259 dsp 0;
+#X obj 178 43 route dsp;
+#X msg 11 184 \; pd dsp \$1;
+#X obj 178 131 float;
+#X obj 178 22 receive pd;
+#X obj 11 36 > 0;
+#X obj 178 223 outlet;
+#X obj 11 7 r pd-l2ork-k12_main_out;
+#X obj 11 62 change -1;
+#X connect 0 0 2 0;
+#X connect 2 0 5 0;
+#X connect 3 0 0 0;
+#X connect 4 0 7 0;
+#X connect 6 0 4 0;
+#X connect 7 0 1 0;
+#X connect 7 0 2 0;
+#X restore 435 331 pd dsp logic;
+#X obj 207 138 *~;
+#X obj 207 104 z~ 64;
+#X obj 254 104 limiter~;
+#X msg 266 81 compress 98 88 0.5;
+#X obj 444 421 loadbang;
+#X obj 207 396 svf~ 200;
+#X obj 229 353 sig~ 200;
+#X obj 252 374 sig~ 0.01;
+#X obj 211 487 dac~;
+#X obj 310 431 *~ 0.5;
+#X obj 207 433 *~ 0.5;
+#X obj 408 14 preset_node k12;
+#X obj 398 198 vsl 34 44 0 100 0 0 pd-l2ork-k12_main_out null empty
+0 -9 0 10 -262144 -1 -1 4300 1;
+#N canvas 449 233 271 201 level 0;
+#X obj 49 8 inlet~;
+#X obj 48 140 *~;
+#X obj 152 8 inlet;
+#X obj 152 124 line~;
+#X obj 48 163 outlet~;
+#X obj 152 58 / 100;
+#X msg 152 102 \$1 50;
+#X obj 152 80 pow 2;
+#X connect 0 0 1 0;
+#X connect 1 0 4 0;
+#X connect 2 0 5 0;
+#X connect 3 0 1 1;
+#X connect 5 0 7 0;
+#X connect 6 0 3 0;
+#X connect 7 0 6 0;
+#X restore 207 57 pd level;
+#X obj 266 57 loadbang;
+#X obj 435 363 select 0 1;
+#X msg 463 399 open @pd_extra/K12/objects/audio_on.png;
+#X msg 435 445 open @pd_extra/K12/objects/audio_off.png;
+#X obj 350 233 tgl 15 0 \$0-null-send \$0-null-receive empty 17 7 0
+10 -262144 -1 -1 0 1;
+#X text 347 216 mode;
+#X text 347 207 stereo;
+#X obj 207 329 *~;
+#X obj 312 374 *~;
+#X obj 327 353 line~;
+#X obj 222 162 loadbang;
+#X obj 311 104 preset_node k12;
+#X obj 223 308 line~;
+#X msg 223 184 1;
+#X msg 252 184 0;
+#X msg 327 331 \$1 10;
+#X msg 230 284 \$1 10;
+#X obj 230 262 expr 1-$f1;
+#X obj 488 81 sig~ 1;
+#X obj 488 126 snapshot~;
+#X obj 534 81 loadbang;
+#X obj 488 148 change;
+#X obj 488 170 s pd-l2ork-k12_main_out;
+#X text 424 60 logic for detecting dsp status on startup;
+#X obj 534 103 delay 10;
+#X obj 438 98 change;
+#X obj 440 209 r pd-l2ork-k12_main_out;
+#X msg 394 258 set \$1;
+#X obj 635 170 value glob_l2ork_stereo;
+#X obj 350 258 change;
+#X obj 635 107 t b f;
+#X obj 635 128 s glob_l2ork_stereo_changed;
+#X obj 635 148 r glob_l2ork_stereo_changed;
+#X obj 65 53 loadbang;
+#X msg 75 101 100;
+#X obj 310 493 outlet~;
+#X obj 373 492 outlet~;
+#X connect 1 0 16 0;
+#X connect 2 0 18 0;
+#X connect 3 0 24 0;
+#X connect 3 0 25 0;
+#X connect 4 0 3 0;
+#X connect 5 0 3 1;
+#X connect 6 0 5 0;
+#X connect 7 0 20 0;
+#X connect 8 0 13 0;
+#X connect 8 1 12 0;
+#X connect 9 0 8 1;
+#X connect 10 0 8 2;
+#X connect 12 0 11 0;
+#X connect 12 0 52 0;
+#X connect 13 0 11 1;
+#X connect 13 0 53 0;
+#X connect 15 0 16 1;
+#X connect 15 0 44 0;
+#X connect 16 0 5 0;
+#X connect 16 0 4 0;
+#X connect 17 0 6 0;
+#X connect 18 0 20 0;
+#X connect 18 1 19 0;
+#X connect 19 0 0 0;
+#X connect 20 0 0 0;
+#X connect 21 0 28 0;
+#X connect 21 0 32 0;
+#X connect 21 0 34 0;
+#X connect 21 0 46 0;
+#X connect 24 0 8 0;
+#X connect 25 0 13 0;
+#X connect 25 0 12 0;
+#X connect 26 0 25 1;
+#X connect 27 0 30 0;
+#X connect 27 0 31 0;
+#X connect 28 0 21 0;
+#X connect 29 0 24 1;
+#X connect 30 0 29 0;
+#X connect 31 0 26 0;
+#X connect 32 0 26 0;
+#X connect 33 0 29 0;
+#X connect 34 0 33 0;
+#X connect 35 0 36 0;
+#X connect 36 0 38 0;
+#X connect 37 0 41 0;
+#X connect 38 0 39 0;
+#X connect 41 0 36 0;
+#X connect 41 0 45 0;
+#X connect 43 0 42 0;
+#X connect 44 0 42 0;
+#X connect 45 0 21 0;
+#X connect 46 0 47 0;
+#X connect 47 0 48 0;
+#X connect 47 1 45 0;
+#X connect 49 0 45 0;
+#X connect 50 0 51 0;
+#X connect 51 0 15 0;
+#X coords 0 -1 1 1 107 110 1 334 147;
+#X restore 1790 442 pd dacc;
+#X obj 1947 392 bng 15 250 50 0 empty empty empty 17 7 0 10 -4034 -1
+-1;
+#X floatatom 1956 -46 7 0 0 1 _X #0-wii-accX-set #0-wii-accX, f 7
+;
+#X floatatom 1962 -2 7 0 0 1 _Y #0-wii-accY-set #0-wii-accY, f 7;
+#X obj 1815 -46 hsl 128 14 -1 1 0 0 \$0-wii-accX \$0-wii-accX-set empty
+-2 -8 0 10 -225271 -1 -1 0 1;
+#X obj 1815 -1 hsl 128 14 -1 1 0 0 \$0-wii-accY \$0-wii-accY-set empty
+-2 -8 0 10 -225271 -1 -1 0 1;
+#X obj 1199 139 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 1464 592 *~;
+#X msg 1435 464 \$1 200;
+#X obj 1435 486 line~;
+#X obj 1162 40 * 2;
+#X obj 1263 487 *~;
+#X floatatom 1933 193 5 0 0 0 - - -, f 5;
+#X obj 1784 130 expr 100*(1-0.5*($f1 + 1));
+#X obj 1773 171 dbtorms;
+#X obj 1829 258 line~;
+#X obj 1911 155 expr (1-0.5*($f1 + 1));
+#X msg 1828 229 \$1 20;
+#X obj 1159 102 line~;
+#X msg 1180 75 \$1 20;
+#X obj 1239 63 line;
+#N canvas 57 24 1311 719 movie 0;
+#X text 209 -49 GEM object;
+#X obj 206 0 cnv 15 250 350 empty empty empty 20 12 0 14 -228992 -66577
+0;
+#X text 210 -17 Example:;
+#X obj 351 283 cnv 15 100 60 empty empty empty 20 12 0 14 -195568 -66577
+0;
+#N canvas 0 0 450 300 gemwin 0;
+#X obj 132 136 gemwin;
+#X obj 67 89 outlet;
+#X obj 67 10 inlet;
+#X msg 67 70 set destroy;
+#X msg 132 112 create \, 1;
+#X msg 198 112 destroy;
+#X msg 156 71 set create;
+#X obj 67 41 route create;
+#X connect 2 0 7 0;
+#X connect 3 0 1 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 1 0;
+#X connect 7 0 3 0;
+#X connect 7 0 4 0;
+#X connect 7 1 6 0;
+#X connect 7 1 5 0;
+#X restore 356 322 pd gemwin;
+#X msg 356 303 destroy;
+#X text 352 282 Create window:;
+#X obj 208 31 cnv 15 155 250 empty empty empty 20 12 0 14 -24198 -66577
+0;
+#X obj 208 6 gemhead;
+#X obj 208 303 pix_texture;
+#X obj 220 33 bng 25 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 262 0 open a supported;
+#X text 263 11 movie-clip;
+#X floatatom 223 255 5 0 0 3 length - -, f 5;
+#X floatatom 271 255 5 0 0 3 width - -, f 5;
+#X floatatom 322 255 5 0 0 3 height - -, f 5;
+#X obj 271 194 bng 15 250 50 0 empty empty end_reached 20 7 0 10 -262144
+-1 -1;
+#X floatatom 261 176 5 0 10000 1 frameNum - -, f 5;
+#X obj 220 60 openpanel;
+#X msg 220 79 open \$1;
+#X obj 208 325 rectangle 4 3;
+#X msg 226 117 auto \$1;
+#X obj 226 99 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+;
+#X msg 237 136 colorspace Grey;
+#N canvas 47 48 928 614 :: 0;
+#X text 24 16 the format [pix_film] is able to decode depends on the
+system you are running Gem.;
+#X text 33 52 basically Gem's decoding capabailities are handled by
+plugins. You should see \, which plugins are loaded \, when instantiating
+the first [pix_film] object: a line "[pix_film]: foo support" means
+\, that the 'foo' plugin has been loaded.;
+#X text 453 50 you can add a plugin to your system by simply copying
+the plugin-binary called "gem_filmNAME.dll" (or gem_filmNAME.so if
+you are on a unix-like system) into your Gem-directory (where you find
+the Gem-binary \, e.g. Gem.dll);
+#X text 456 103 if you want to remove a plugin (e.g. because you are
+not satisfied with the decoding quality of because it is unstable)
+\, you can simply remove the corresponding gem_filmNAME.dll file from
+your Gem-directory.;
+#X text 35 123 which media can be decoded \, depends on the installed
+plugins and on the codecs you have installed on your system.;
+#X obj 45 248 cnv 15 200 15 empty empty empty 20 12 0 14 -203904 -66577
+0;
+#X obj 45 303 cnv 15 200 15 empty empty empty 20 12 0 14 -203904 -66577
+0;
+#X obj 445 248 cnv 15 200 15 empty empty empty 20 12 0 14 -203904 -66577
+0;
+#X text 449 249 Gmerlin (gem_filmGMERLIN);
+#X text 49 249 QuickTime (gem_filmQT);
+#X text 73 262 available on OS-X (PPC and i386 \, but not 64bit!) and
+W32;
+#X text 73 277 should be able to decode any QuickTime MOV \, and probably
+a lot more;
+#X text 49 304 DirectShow (gem_filmDS);
+#X text 73 317 available on W32;
+#X text 73 331 should be able to decode anything for which you have
+a DirectShow filter installed;
+#X text 50 365 AVI (gem_filmAVI);
+#X text 73 380 available on W32;
+#X text 73 394 this uses the old (pre-XP) W32-API for decoding movies.
+Support for newer codecs is probably limited;
+#X text 50 424 AVIPLAY (gem_filmAVIPLAY);
+#X text 73 439 available on linux;
+#X text 74 452 uses the meta-framework "avifile" to decode movies \,
+which itself has a plugin system to use ffmpeg \, vorbis \, w32-dlls
+\, ... to decode videos;
+#X text 73 507 available on linux;
+#X text 50 494 quicktime4linux (gem_filmQT4L);
+#X text 73 522 uses libquicktime/lqt for decoding;
+#X text 473 262 available on linux (probably also on OSX and W32);
+#X text 473 277 uses Gmerlin-avdecoder to decode lots of formats;
+#X text 449 304 MPEG3 (gem_filmMPEG3);
+#X text 473 317 available on linux;
+#X text 473 331 should be able to decode various MPEG-formats (e.g.
+MPEG-2-Video and MPEG-2-transportstreams);
+#X text 473 380 available on linux;
+#X text 473 394 uses an old \, buggy (and no longer developed) library
+to decode MPEG-streams;
+#X text 450 365 MPEG (gem_filmMPEG1);
+#X text 450 424 Darwin (gem_filmDarwin);
+#X text 473 439 available on OS-X;
+#X text 450 484 test (gem_TEST);
+#X text 473 497 available on ALL platforms;
+#X text 473 512 outputs test images rather than decoding real media
+files;
+#X text 270 194 available film decoding plugins;
+#X text 260 210 (recommended plugins are highlighed);
+#X text 474 452 an alternative implementation of the QuickTime plugin
+for OS-X only;
+#X restore 242 407 pd :: FORMATS;
+#X obj 230 218 unpack 0 0 0 0;
+#X floatatom 338 219 5 0 0 3 fps - -, f 5;
+#X obj 208 194 pix_film;
+#X msg 243 155 driver foo;
+#X connect 4 0 5 0;
+#X connect 5 0 4 0;
+#X connect 8 0 27 0;
+#X connect 9 0 20 0;
+#X connect 10 0 18 0;
+#X connect 17 0 27 1;
+#X connect 18 0 19 0;
+#X connect 19 0 27 0;
+#X connect 21 0 27 0;
+#X connect 22 0 21 0;
+#X connect 23 0 27 0;
+#X connect 25 0 13 0;
+#X connect 25 1 14 0;
+#X connect 25 2 15 0;
+#X connect 25 3 26 0;
+#X connect 27 0 9 0;
+#X connect 27 1 25 0;
+#X connect 27 2 16 0;
+#X connect 28 0 27 0;
+#X restore 1978 306 pd movie;
+#N canvas 710 76 450 300 tremolop 0;
+#X obj 270 168 *~ 0.5;
+#X obj 271 199 +~ 0.5;
+#X obj 220 242 *~;
+#X obj 265 122 cycle~ 5;
+#X obj 269 94 + 1;
+#X obj 51 258 *~;
+#X obj 144 239 *~;
+#X obj 59 229 line~;
+#X msg 59 205 \$1 10;
+#X obj 158 206 line~;
+#X msg 157 182 \$1 10;
+#X obj 59 179 == 0;
+#X obj 168 161 > 0;
+#X obj 59 137 r dpad;
+#X obj 166 140 r dpad;
+#X obj 280 56 r dpad;
+#X obj 112 327 outlet~;
+#X obj 121 69 inlet~;
+#X connect 0 0 1 0;
+#X connect 1 0 2 1;
+#X connect 2 0 16 0;
+#X connect 3 0 0 0;
+#X connect 4 0 3 0;
+#X connect 5 0 16 0;
+#X connect 6 0 2 0;
+#X connect 7 0 5 1;
+#X connect 8 0 7 0;
+#X connect 9 0 6 1;
+#X connect 10 0 9 0;
+#X connect 11 0 8 0;
+#X connect 12 0 10 0;
+#X connect 13 0 11 0;
+#X connect 14 0 12 0;
+#X connect 15 0 4 0;
+#X connect 17 0 6 0;
+#X connect 17 0 5 0;
+#X restore 1313 506 pd tremolop;
+#X obj 1498 1 s dpad;
+#N canvas 758 303 450 300 readwritesettings 0;
+#X obj 82 78 coll;
+#C restore;
+#X msg 59 41 write settings.coll;
+#X msg 184 79 read settings.coll;
+#X floatatom 211 53 5 0 0 0 - - -, f 5;
+#X symbolatom 82 100 10 0 0 0 - - -, f 10;
+#X msg 217 16 0 \$1;
+#X floatatom 218 -25 5 0 0 0 - - -, f 5;
+#X floatatom 157 116 5 0 0 0 - - -, f 5;
+#X connect 0 0 4 0;
+#X connect 0 0 7 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 5 0;
+#X restore 1512 197 pd readwritesettings;
+#X msg 1275 279 hit1.wav;
+#X msg 1314 364 bih.wav;
+#X msg 1284 300 is.wav;
+#X msg 1294 322 one.wav;
+#X msg 1304 342 thicc.wav;
+#X msg 1260 36 \$1 20;
+#N canvas 694 325 450 300 wavePlayer 0;
+#X obj 146 52 inlet~;
+#X obj 222 61 inlet;
+#X obj 386 71 inlet;
+#X obj 297 374 outlet~;
+#X obj 270 80 openpanel;
+#X obj 270 205 soundfiler;
+#X obj 390 241 s sampleSize;
+#X obj 270 242 expr 48000 / $f1;
+#X obj 270 267 phasor~;
+#X obj 270 297 *~;
+#X obj 270 326 tabread4~ waveTable;
+#X obj 386 266 r sampleSize;
+#X msg 270 170 read -resize \$1 waveTable;
+#X obj 334 138 prepend symbol;
+#X connect 0 0 8 0;
+#X connect 1 0 4 0;
+#X connect 2 0 13 0;
+#X connect 4 0 12 0;
+#X connect 5 0 7 0;
+#X connect 5 0 6 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 10 0 3 0;
+#X connect 11 0 9 1;
+#X connect 12 0 5 0;
+#X connect 13 0 12 0;
+#X restore 1221 412 pd wavePlayer;
+#N canvas 822 222 450 300 reverb 0;
+#X obj 103 187 freeverb~;
+#N canvas 718 134 450 300 freeverbProperties 0;
+#X msg 258 223 print;
+#X text 209 139 - print the current values of the above parameters
+;
+#X text 222 162 - start/stop freeze of reverb tail \, using 1 or 0
+;
+#X text 226 183 - bypass the reverb processing \, using a 1 or 0;
+#X text 207 117 - level of unprocessed signal \, between 0 and 1 (default:
+0);
+#X text 211 96 - level of reverbed signal \, between 0 and 1 (default:
+0.3);
+#X text 233 51 - amount of damping of room's surfaces (default: 0.5)
+;
+#X text 215 75 - stereo width of reverb (default: 1);
+#X text 237 29 - size of the room to be simulated (default=0.85);
+#X obj 212 256 outlet;
+#X obj 120 4 loadbang;
+#X msg 146 162 freeze 0;
+#X msg 146 184 bypass 0;
+#X msg 146 30 roomsize 0.85;
+#X msg 146 52 damping 0.5;
+#X msg 146 74 width 0;
+#X msg 146 96 wet 0.5;
+#X msg 146 118 dry 0.5;
+#X connect 0 0 9 0;
+#X connect 10 0 13 0;
+#X connect 10 0 12 0;
+#X connect 10 0 11 0;
+#X connect 10 0 17 0;
+#X connect 10 0 16 0;
+#X connect 10 0 15 0;
+#X connect 10 0 14 0;
+#X connect 11 0 9 0;
+#X connect 12 0 9 0;
+#X connect 13 0 9 0;
+#X connect 14 0 9 0;
+#X connect 15 0 9 0;
+#X connect 16 0 9 0;
+#X connect 17 0 9 0;
+#X restore 125 132 pd freeverbProperties;
+#X obj 82 28 inlet~;
+#X obj 284 125 *~;
+#X obj 32 112 *~;
+#X obj 103 209 outlet~;
+#X msg 338 88 \$1 10;
+#X obj 338 110 line~;
+#X msg 95 75 \$1 10;
+#X obj 95 97 line~;
+#X obj 239 37 nbx 12 16 -1e+37 1e+37 0 0 empty \$0-wii-btn02-set empty
+0 10 0 12 -225280 -1 -1 0 256 0;
+#X obj 211 107 > 0;
+#X obj 211 85 & 16;
+#X obj 297 85 == 0;
+#X obj 183 91 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 297 107 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X connect 0 0 5 0;
+#X connect 1 0 0 0;
+#X connect 2 0 4 0;
+#X connect 2 0 3 0;
+#X connect 3 0 5 0;
+#X connect 4 0 0 0;
+#X connect 6 0 7 0;
+#X connect 7 0 3 1;
+#X connect 8 0 9 0;
+#X connect 9 0 4 1;
+#X connect 10 0 12 0;
+#X connect 11 0 8 0;
+#X connect 11 0 13 0;
+#X connect 11 0 14 0;
+#X connect 12 0 11 0;
+#X connect 13 0 6 0;
+#X connect 13 0 15 0;
+#X restore 1533 481 pd reverb;
+#N canvas 455 88 903 471 combfilter 0;
+#X obj 82 28 inlet~;
+#X obj 284 125 *~;
+#X obj 32 112 *~;
+#X obj 175 314 outlet~;
+#X msg 338 88 \$1 10;
+#X obj 338 110 line~;
+#X msg 95 75 \$1 10;
+#X obj 95 97 line~;
+#X obj 239 37 nbx 12 16 -1e+37 1e+37 0 0 empty \$0-wii-btn02-set empty
+0 10 0 12 -225280 -1 -1 0 256 0;
+#X obj 211 107 > 0;
+#X obj 297 85 == 0;
+#X obj 183 91 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 297 107 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X floatatom 208 191 5 0 0 0 - - -, f 5;
+#X floatatom 245 216 5 0 0 0 - - -, f 5;
+#X floatatom 282 239 5 0 0 0 - - -, f 5;
+#X floatatom 319 264 5 0 0 0 - - -, f 5;
+#X text 245 191 D = delay time;
+#X text 280 215 a = input (pre delay) amplitude coefficient;
+#X text 321 239 b = input (post delay) amplitude coefficient;
+#X text 355 264 c = outnput amplitude coefficient;
+#X text 206 162 D \, a \, b \, c inlets support signals as well:;
+#X obj 211 85 & 8;
+#X obj 172 289 comb~ 10 0.9 0.5 0.5;
+#X msg 352 337 10 0.9 0.5 0.5;
+#X obj 374 299 loadbang;
+#X connect 0 0 2 0;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 2 0 23 0;
+#X connect 4 0 5 0;
+#X connect 5 0 1 1;
+#X connect 6 0 7 0;
+#X connect 7 0 2 1;
+#X connect 8 0 22 0;
+#X connect 9 0 6 0;
+#X connect 9 0 10 0;
+#X connect 9 0 11 0;
+#X connect 10 0 4 0;
+#X connect 10 0 12 0;
+#X connect 13 0 23 1;
+#X connect 14 0 23 2;
+#X connect 15 0 23 3;
+#X connect 16 0 23 4;
+#X connect 22 0 9 0;
+#X connect 23 0 3 0;
+#X connect 24 0 23 0;
+#X connect 25 0 24 0;
+#X restore 1533 453 pd combfilter;
+#X obj 1280 111 r filename;
+#X obj 1278 173 sel 1 2 3 4 5;
+#X obj 1280 133 + 1;
+#X obj 1901 337 r perfect;
+#X obj 2040 346 r search;
+#N canvas 0 21 852 401 recorder 0;
+#X obj 65 28 inlet~;
+#X msg 290 256 start;
+#X msg 364 265 stop;
+#X obj 320 140 r startrecording;
+#X obj 320 167 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 320 187 sel 1 0;
+#X obj 123 28 inlet~;
+#X obj 65 177 writesf~ 2;
+#X obj 171 -44 r audiorecordername;
+#X obj 600 113 print folder;
+#X obj 600 91 spigot;
+#X obj 658 91 tgl 15 0 empty empty debug 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 623 177 print symbol;
+#X obj 171 56 print open;
+#X obj 623 147 spigot;
+#X obj 681 147 tgl 15 0 empty empty debug 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 290 229 delay 1500;
+#X obj 364 234 delay 2000;
+#N canvas 70 489 588 305 filenamer 0;
+#X obj 291 -32 shell;
+#X obj 291 -10 symbol;
+#X symbolatom 291 12 15 0 0 0 - - -, f 15;
+#X obj 512 -72 sel 1;
+#X obj 448 54 shell;
+#X obj 448 -24 loadbang;
+#X obj 448 140 print myipaddress;
+#X obj 512 -94 inlet;
+#X obj 291 99 outlet;
+#X obj 362 161 s myip;
+#X msg 448 11 cd ~/L2Ork/PD/Abstractions/ && ./whatismyip && cd ~/L2Ork/Works/Tramte/tramte-ioii
+&& ./hostnamescript;
+#X obj 448 76 symbol;
+#X symbolatom 448 98 15 0 0 0 - - -, f 15;
+#X obj 553 -72 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 291 -54 date +%k.%m.%d.%M;
+#X msg 580 -86 1;
+#X text 523 -24 Severed \, don't need this anymore;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 8 0;
+#X connect 3 0 14 0;
+#X connect 3 0 13 0;
+#X connect 4 0 11 0;
+#X connect 7 0 3 0;
+#X connect 10 0 4 0;
+#X connect 11 0 12 0;
+#X connect 12 0 6 0;
+#X connect 12 0 9 0;
+#X connect 14 0 0 0;
+#X connect 15 0 3 0;
+#X restore 171 6 pd filenamer;
+#X obj 636 -13 r myip;
+#X obj 171 -19 spigot;
+#X obj 319 -22 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 319 -70 loadbang;
+#X msg 319 -48 1;
+#X msg 260 229 0;
+#X msg 437 232 1;
+#X obj 606 57 print frommyip;
+#X obj 627 11 symbol;
+#X symbolatom 608 36 10 0 0 0 - - -, f 10;
+#X msg 171 31 open -bytes 4 /home/l2orkist/\$1.wav;
+#X obj 279 311 print recording;
+#X text 258 4 Full output as hour.minute.day.month..wav;
+#X obj 429 60 s therecordingfilename;
+#X text 427 80 For gui;
+#X connect 0 0 7 0;
+#X connect 1 0 7 0;
+#X connect 1 0 30 0;
+#X connect 2 0 7 0;
+#X connect 2 0 30 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 5 0 16 0;
+#X connect 5 1 17 0;
+#X connect 6 0 7 1;
+#X connect 8 0 20 0;
+#X connect 10 0 9 0;
+#X connect 11 0 10 1;
+#X connect 14 0 12 0;
+#X connect 15 0 14 1;
+#X connect 16 0 1 0;
+#X connect 16 0 24 0;
+#X connect 17 0 2 0;
+#X connect 17 0 25 0;
+#X connect 18 0 29 0;
+#X connect 18 0 32 0;
+#X connect 19 0 26 0;
+#X connect 19 0 27 0;
+#X connect 20 0 18 0;
+#X connect 21 0 20 1;
+#X connect 22 0 23 0;
+#X connect 23 0 21 0;
+#X connect 24 0 21 0;
+#X connect 25 0 21 0;
+#X connect 27 0 28 0;
+#X connect 29 0 13 0;
+#X connect 29 0 7 0;
+#X restore 1790 583 pd recorder;
+#N canvas 404 154 450 300 performergain 0;
+#X obj 101 89 inlet~;
+#X obj 101 111 *~;
+#X obj 101 133 outlet~;
+#X obj 239 123 line~;
+#X msg 239 93 \$1 100;
+#X obj 239 37 inlet;
+#X obj 239 59 / 100;
+#X floatatom 282 59 5 0 0 0 - - -, f 5;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 3 0 1 1;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 6 0 4 0;
+#X restore 1533 509 pd performergain;
+#N canvas 414 164 450 300 performergainpreset 0;
+#X obj 104 201 outlet;
+#X obj 170 62 loadbang;
+#X obj 170 84 delay 200;
+#X msg 169 106 100;
+#X obj 206 201 s performeraudiogaingui;
+#X text 235 63 Default is 100%;
+#X obj 247 105 r performergainsend;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 0 0 0;
+#X connect 6 0 0 0;
+#X coords 0 0 1 1 137 38 0;
+#X restore 1626 462 pd performergainpreset;
+#X connect 2 0 1 1;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 6 0 3 0;
+#X connect 6 0 35 0;
+#X connect 7 0 8 0;
+#X connect 8 0 10 0;
+#X connect 9 0 11 0;
+#X connect 9 0 20 0;
+#X connect 10 0 9 0;
+#X connect 12 0 51 0;
+#X connect 12 1 51 1;
+#X connect 13 0 1 0;
+#X connect 16 0 42 0;
+#X connect 17 0 25 0;
+#X connect 17 0 28 0;
+#X connect 18 0 43 1;
+#X connect 19 0 45 0;
+#X connect 20 0 21 0;
+#X connect 21 0 19 1;
+#X connect 22 0 31 0;
+#X connect 23 0 34 0;
+#X connect 25 0 26 0;
+#X connect 27 0 23 1;
+#X connect 28 0 29 0;
+#X connect 28 0 24 0;
+#X connect 29 0 27 0;
+#X connect 30 0 43 0;
+#X connect 31 0 30 0;
+#X connect 32 0 22 0;
+#X connect 34 0 19 0;
+#X connect 37 0 43 2;
+#X connect 38 0 43 2;
+#X connect 39 0 43 2;
+#X connect 40 0 43 2;
+#X connect 41 0 43 2;
+#X connect 42 0 32 0;
+#X connect 43 0 23 0;
+#X connect 44 0 52 0;
+#X connect 45 0 44 0;
+#X connect 46 0 48 0;
+#X connect 47 0 37 0;
+#X connect 47 1 39 0;
+#X connect 47 2 40 0;
+#X connect 47 3 41 0;
+#X connect 47 4 38 0;
+#X connect 48 0 47 0;
+#X connect 49 0 13 0;
+#X connect 50 0 2 0;
+#X connect 52 0 12 0;
+#X connect 53 0 52 1;
+#X restore 217 229 pd guts;
+#X obj 55 28 cnv 15 180 93 empty empty Wiimote 20 12 0 26 -159808 -228856
+0;
+#X obj 62 78 bng 15 250 50 0 search empty Discover\ Wiimote 17 7 0
+10 -260097 -1 -228856;
+#X obj 62 57 bng 15 250 50 0 perfect empty Perfect\ Pair\ Wiimote 17
+7 0 10 -4034 -1 -228856;
+#N canvas 470 250 450 300 (subpatch) 0;
+#X array waveTable 19819 float 2 black black;
+#X coords 0 1 19819 -1 55 50 1;
+#X restore 206 157 graph;
+#X obj 45 176 hradio 30 1 0 5 filename empty Sample\ Selection 0 -8
+0 13 -199357 -1 -1 0;
+#X obj 62 99 tgl 15 0 empty wiimoteconnection Wiimote\ Connected 21
+7 0 10 -262130 -1 -228856 0 1;
+#X text 43 239 Gui made by Brandon Hale;
+#X text 42 226 Composed by Dan Tramte;
+#X obj 47 128 tgl 26 0 loadvideo empty load\ video 29 11 0 12 -261234
+-1 -1 0 1;
+#N canvas 877 161 278 239 transportwindow 0;
+#N canvas 109 78 1278 691 transport 0;
+#X obj -55 -291 hsl 128 15 0 255 0 0 empty empty Use\ this\ if\ needed\ just\ set\ range
+-2 -8 0 10 -261682 -1 -1 0 1;
+#N canvas 0 24 1278 719 xjadeoloader 0;
+#X obj 178 172 shell;
+#X obj 178 248 print xjadeoshell;
+#X obj 178 194 spigot;
+#X obj 229 173 tgl 15 0 empty empty debug 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 310 176 loadbang;
+#X msg 310 198 1;
+#X obj 177 44 inlet;
+#X msg 228 103 pkill xjadeo;
+#X obj 177 66 sel 1 0;
+#X obj 85 35 s xjadeoopen;
+#X text 8 123 cd to path of movie;
+#X text 2 143 Then launch movie in xjadeo;
+#X msg 177 131 cd ~/L2Ork/Works/Tramte/tramte-ioii && xjadeo -a tramte_small.mp4
+;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 1;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X connect 6 0 8 0;
+#X connect 6 0 9 0;
+#X connect 7 0 0 0;
+#X connect 8 0 12 0;
+#X connect 8 1 7 0;
+#X connect 12 0 0 0;
+#X restore 573 -245 pd xjadeoloader;
+#X text 146 52 Made by Brandon Hale;
+#X msg 238 -135 send clock \$1;
+#X msg 139 -136 send basic \$1;
+#X obj 573 -278 tgl 15 0 empty loadvideo load\ video 17 7 0 10 -262144
+-1 -1 0 1;
+#N canvas 594 155 450 425 opencounter 0;
+#X obj 215 202 noquit;
+#X obj 191 118 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 232 111 bang;
+#X msg 248 135 reset;
+#X msg 259 158 quit;
+#X obj 215 230 bng 35 250 50 0 empty empty bang_on_quit 38 17 0 12
+-261234 -1 -1;
+#X msg 259 178 quitnow;
+#X text 310 157 quit in the normal way;
+#X text 239 86 override/reset quitting;
+#X text 269 112 override quitting;
+#X text 290 133 re-enable normal quit function;
+#X text 310 177 quit now without any confirmation at all;
+#X text 184 15 override quitting Pd for installations \, performances
+\, etc.;
+#X obj 164 40 r xjadeoopen;
+#X obj 273 39 r qtractoropen;
+#X obj 457 98 +;
+#X obj 458 60 t b f;
+#X floatatom 164 62 5 0 0 0 - - -, f 5;
+#X floatatom 273 61 5 0 0 0 - - -, f 5;
+#X obj 457 120 > 0;
+#X msg 376 255 0;
+#X obj 451 205 t b b;
+#X obj 466 232 del 2000;
+#X obj 310 302 s loadvideo;
+#X obj 407 302 s loadaudio;
+#X connect 0 0 5 0;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 21 0;
+#X connect 6 0 0 0;
+#X connect 13 0 17 0;
+#X connect 14 0 18 0;
+#X connect 15 0 19 0;
+#X connect 16 0 17 0;
+#X connect 16 1 15 1;
+#X connect 17 0 15 0;
+#X connect 18 0 16 0;
+#X connect 20 0 23 0;
+#X connect 20 0 24 0;
+#X connect 21 0 22 0;
+#X connect 21 1 20 0;
+#X connect 22 0 4 0;
+#X restore 800 48 pd opencounter;
+#N canvas 599 86 641 450 keyboardfunctions 0;
+#X obj 135 32 key;
+#X floatatom 135 54 5 0 0 0 - - -, f 5;
+#X obj 18 148 outlet;
+#X obj 67 148 outlet;
+#X obj 116 148 outlet;
+#X obj 18 117 spigot;
+#X obj 67 117 spigot;
+#X obj 116 117 spigot;
+#X obj 301 115 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 358 69 loadbang;
+#X msg 358 91 1;
+#X text 104 185 To turn off conductor keyboardfunctions;
+#X text 102 207 Type shift+<>?;
+#X text 350 118 1 for conductor \, 0 for performers;
+#N canvas 470 250 450 408 keyboardfunctionoff 0;
+#X obj 228 -51 sel 60;
+#X obj 209 28 sel 62;
+#X obj 212 108 sel 63;
+#X obj 228 -29 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 204 -1 spigot;
+#X obj 209 50 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 214 82 spigot;
+#X obj 212 130 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 167 -84 inlet;
+#X obj 212 156 sel 1;
+#X msg 172 194 0;
+#X obj 213 198 outlet;
+#X connect 0 0 3 0;
+#X connect 1 0 5 0;
+#X connect 2 0 7 0;
+#X connect 3 0 4 1;
+#X connect 4 0 1 0;
+#X connect 5 0 6 1;
+#X connect 6 0 2 0;
+#X connect 7 0 9 0;
+#X connect 8 0 0 0;
+#X connect 8 0 4 0;
+#X connect 8 0 6 0;
+#X connect 9 0 10 0;
+#X connect 9 0 11 0;
+#X connect 10 0 7 0;
+#X connect 10 0 3 0;
+#X connect 10 0 5 0;
+#X restore 299 23 pd keyboardfunctionoff;
+#X obj 541 251 bng 15 250 50 0 empty empty on/off -38 7 0 10 -24198
+-262144 -1;
+#X msg 541 216 color \$1 30 22;
+#X obj 301 135 sel 0 1;
+#X msg 301 158 13;
+#X msg 331 159 16;
+#X obj 168 148 outlet;
+#X obj 168 116 spigot;
+#X text 95 287 Start stop jackreset playfromselection;
+#X text 95 308 Shift+1 shift+2 shift+3 shift+4;
+#X obj 218 262 outlet;
+#X obj 218 230 spigot;
+#X obj 119 82 sel 33 64 35 36 53 37;
+#X text 95 329 key 5 is vibrateshift+5 is attention vibrate;
+#X msg 213 161 1;
+#X msg 248 161 2;
+#X connect 0 0 1 0;
+#X connect 1 0 14 0;
+#X connect 1 0 26 0;
+#X connect 5 0 2 0;
+#X connect 6 0 3 0;
+#X connect 7 0 4 0;
+#X connect 8 0 7 1;
+#X connect 8 0 6 1;
+#X connect 8 0 5 1;
+#X connect 8 0 17 0;
+#X connect 8 0 21 1;
+#X connect 8 0 25 1;
+#X connect 9 0 10 0;
+#X connect 10 0 8 0;
+#X connect 14 0 8 0;
+#X connect 16 0 15 0;
+#X connect 17 0 18 0;
+#X connect 17 1 19 0;
+#X connect 18 0 16 0;
+#X connect 19 0 16 0;
+#X connect 21 0 20 0;
+#X connect 25 0 24 0;
+#X connect 26 0 5 0;
+#X connect 26 1 6 0;
+#X connect 26 2 7 0;
+#X connect 26 3 21 0;
+#X connect 26 4 28 0;
+#X connect 26 5 29 0;
+#X connect 28 0 25 0;
+#X connect 29 0 25 0;
+#X coords 0 -1 1 1 186 17 1 371 250;
+#X restore 139 -278 pd keyboardfunctions;
+#X text 573 -228 Everyone needs this;
+#N canvas 568 126 818 584 jacktransportcontrols 0;
+#X obj 428 154 shell;
+#X obj 428 176 print;
+#X msg 378 55 echo stop | jack_transport;
+#X msg 352 21 echo play | jack_transport;
+#X obj 360 -30 sel 1 2 3;
+#X msg 400 77 echo locate 0 | jack_transport;
+#X obj 935 -108 samplerate~;
+#X obj 936 -134 loadbang;
+#X floatatom 935 -86 5 0 0 0 - - -, f 5;
+#X obj 863 -47 pack f f;
+#X text 509 113 \$2 is Sample rate;
+#X msg 438 131 echo locate $(( \$2 * \$1)) | jack_transport;
+#X obj 424 -128 inlet;
+#X obj 422 -106 route basic;
+#X obj 529 -107 route clock;
+#X floatatom 422 -84 5 0 0 0 - - -, f 5;
+#X floatatom 529 -85 5 0 0 0 - - -, f 5;
+#X obj 658 -128 inlet;
+#X text 698 -128 Only for if you don't have netowrk;
+#X text 458 -130 For networked messages;
+#X obj 653 -37 print nonetwork;
+#X obj 658 -106 route send;
+#X obj 654 -63 spigot;
+#X obj 699 -80 tgl 15 0 empty empty for\ debugging 17 7 0 10 -262144
+-1 -1 0 1;
+#X obj 552 254 route startrecording;
+#X obj 713 253 route recordingfile;
+#X obj 552 276 s startrecording;
+#X obj 713 275 s audiorecordername;
+#X obj 405 254 route mkdir;
+#X obj 405 276 s mkdirpostnet;
+#X obj 953 253 route vibrate;
+#X obj 953 275 outlet;
+#X obj 393 360 route rmdir;
+#X obj 393 382 s pdrmdir;
+#X text 524 234 Receives a toggle \, 1=on \, 0=off;
+#X text 725 226 Also gets 1 or 0;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 3 0;
+#X connect 4 1 2 0;
+#X connect 4 2 5 0;
+#X connect 5 0 0 0;
+#X connect 6 0 8 0;
+#X connect 7 0 6 0;
+#X connect 8 0 9 1;
+#X connect 9 0 11 0;
+#X connect 11 0 0 0;
+#X connect 12 0 13 0;
+#X connect 12 0 14 0;
+#X connect 12 0 24 0;
+#X connect 12 0 25 0;
+#X connect 12 0 28 0;
+#X connect 12 0 30 0;
+#X connect 13 0 4 0;
+#X connect 13 0 15 0;
+#X connect 13 0 32 0;
+#X connect 14 0 9 0;
+#X connect 14 0 16 0;
+#X connect 17 0 21 0;
+#X connect 21 0 14 0;
+#X connect 21 0 13 0;
+#X connect 21 0 22 0;
+#X connect 21 0 25 0;
+#X connect 21 0 28 0;
+#X connect 21 0 24 0;
+#X connect 21 0 30 0;
+#X connect 21 0 32 0;
+#X connect 22 0 20 0;
+#X connect 23 0 22 1;
+#X connect 24 0 26 0;
+#X connect 25 0 27 0;
+#X connect 28 0 29 0;
+#X connect 30 0 31 0;
+#X connect 32 0 33 0;
+#X restore 149 -24 pd jacktransportcontrols;
+#X text 146 118 You will need to make your qtractor project with audio
+readonly to prevent accidental saving;
+#X obj 141 -231 nbx 4 15 0 1e+37 0 0 foo13_snd foo13_rcv Jack\ Transport\ Seconds
+45 7 0 10 -261682 -1109 -1 0 256 0;
+#X obj -55 -271 expr $i1;
+#X text 150 -326 Can also create sudo timeline in slider if needed
+for video only for reference;
+#X text 146 153 Set output of conductor patch from jack usb to jack
+laptop;
+#N canvas 692 183 450 300 jacktransportmessages 0;
+#X obj 111 77 bng 15 250 50 0 empty empty Start 17 7 0 10 -204786 -1
+-1;
+#X obj 162 77 bng 15 250 50 0 empty empty Stop 17 7 0 10 -261234 -1
+-1;
+#X obj 213 77 bng 15 250 50 0 empty empty Jack\ reset 17 7 0 10 -261682
+-1 -1;
+#X obj 113 24 inlet;
+#X obj 163 24 inlet;
+#X obj 213 24 inlet;
+#X obj 110 145 outlet;
+#X obj 162 145 outlet;
+#X obj 213 145 outlet;
+#X msg 111 97 1;
+#X msg 162 97 2;
+#X msg 213 97 3;
+#X floatatom 312 82 5 0 0 1 seconds - -, f 5;
+#X text 300 13 Jack Transport Control;
+#X obj 312 141 outlet;
+#X obj 312 30 inlet;
+#X connect 0 0 9 0;
+#X connect 1 0 10 0;
+#X connect 2 0 11 0;
+#X connect 3 0 0 0;
+#X connect 4 0 1 0;
+#X connect 5 0 2 0;
+#X connect 9 0 6 0;
+#X connect 10 0 7 0;
+#X connect 11 0 8 0;
+#X connect 12 0 14 0;
+#X connect 15 0 12 0;
+#X coords 0 -1 1 1 190 22 2 105 74;
+#X restore 139 -257 pd jacktransportmessages;
+#N canvas 757 33 450 300 networkingreceive 0;
+#X obj 35 81 outlet;
+#X obj 89 84 print netreceive;
+#X obj 35 53 disis_netreceive 5555 1;
+#X connect 2 0 0 0;
+#X connect 2 0 1 0;
+#X restore 149 -46 pd networkingreceive;
+#X obj 138 -96 s conductorcommunicator;
+#X text 146 71 Notes:;
+#X obj 289 -59 spigot;
+#X obj 314 -212 tgl 15 0 empty empty Turn\ on\ if\ no\ network -128
+7 0 10 -204786 -1 -1 0 1;
+#X text -2 -271 float to integer;
+#X text 146 95 Packages Needed: qtractor xjadeo ffmpeg;
+#X obj 141 -213 bng 15 250 50 0 empty empty empty 17 7 0 10 -261682
+-1 -1;
+#X text 574 35 Used to Stop patch from freezing;
+#X text 564 57 Causes Problems \, don't reconnect this;
+#N canvas 767 54 591 498 audiorecorder 0;
+#X obj 214 38 tgl 15 0 empty empty start -35 7 0 10 -232576 -1 -1 0
+1;
+#X text 308 106 Gives output as hour.minute.day.month;
+#X obj 101 168 outlet;
+#X obj 174 168 outlet;
+#X text 305 37 After this is sent through the network;
+#X text 305 59 It goes to the bottom of the instrument \, pd recorder
+;
+#X obj 404 167 bng 15 250 50 0 empty empty mkdir\ tramterecordings
+-134 7 0 10 -261682 -1 -1;
+#X obj 404 186 outlet;
+#X obj 139 132 t f f;
+#X text 441 169 No longer relevant;
+#X symbolatom 137 59 15 0 0 0 Filename.wav - -, f 15;
+#X obj 70 -3 r therecordingfilename;
+#X connect 0 0 8 0;
+#X connect 8 0 2 0;
+#X connect 8 1 3 0;
+#X connect 11 0 10 0;
+#X coords 0 -1 1 1 183 45 1 52 35;
+#X restore 141 -194 pd audiorecorder;
+#X msg -50 -135 send startrecording \$1;
+#X msg 799 79 send mkdir 1;
+#N canvas 737 223 450 300 wiimoterumble 0;
+#X obj 40 0 inlet;
+#X obj 47 216 s rumbleme;
+#X msg 42 162 1;
+#X msg 91 159 0;
+#X floatatom 39 24 5 0 0 0 - - -, f 5;
+#X obj 39 45 sel 1 2;
+#X obj 39 102 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 220 101 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 94 134 delay 130;
+#X msg 212 168 1;
+#X msg 279 169 0;
+#X obj 264 140 delay 1500;
+#X text 63 94 Short Burst;
+#X text 248 96 Long Burst;
+#X text 22 119 Key 5;
+#X text 200 119 shift+5;
+#X obj 157 133 delay 200;
+#X obj 338 138 delay 2500;
+#X connect 0 0 4 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 5 1 7 0;
+#X connect 6 0 2 0;
+#X connect 6 0 8 0;
+#X connect 6 0 16 0;
+#X connect 7 0 9 0;
+#X connect 7 0 11 0;
+#X connect 7 0 17 0;
+#X connect 8 0 3 0;
+#X connect 9 0 1 0;
+#X connect 10 0 1 0;
+#X connect 11 0 10 0;
+#X connect 16 0 3 0;
+#X connect 17 0 10 0;
+#X restore 149 15 pd wiimoterumble;
+#X text 301 -23 jacktransportcontrols outlet is only for wiimote;
+#X msg 626 -125 send vibrate \$1;
+#X msg 880 79 send rmdir 1;
+#X msg 346 -133 send recordingfile \$1;
+#X text 798 -7 No longer used;
+#X connect 0 0 12 0;
+#X connect 3 0 17 0;
+#X connect 3 0 19 0;
+#X connect 4 0 17 0;
+#X connect 4 0 19 0;
+#X connect 5 0 1 0;
+#X connect 7 0 15 0;
+#X connect 7 1 15 1;
+#X connect 7 2 15 2;
+#X connect 7 3 23 0;
+#X connect 7 4 31 0;
+#X connect 9 0 29 0;
+#X connect 11 0 15 3;
+#X connect 12 0 11 0;
+#X connect 15 0 4 0;
+#X connect 15 1 4 0;
+#X connect 15 2 4 0;
+#X connect 15 3 3 0;
+#X connect 16 0 9 0;
+#X connect 19 0 9 1;
+#X connect 20 0 19 1;
+#X connect 23 0 11 0;
+#X connect 26 0 27 0;
+#X connect 26 1 33 0;
+#X connect 27 0 17 0;
+#X connect 27 0 19 0;
+#X connect 31 0 19 0;
+#X connect 31 0 17 0;
+#X connect 33 0 17 0;
+#X connect 33 0 19 0;
+#X coords 0 -1 1 1 204 134 2 131 -282;
+#X restore 79 -38 pd transport;
+#N canvas 614 251 253 143 keyboardhelp 0;
+#X obj 16 7 bng 15 250 50 0 empty empty Start 17 7 0 10 -204786 -1
+-1;
+#X obj 67 7 bng 15 250 50 0 empty empty Stop 17 7 0 10 -261234 -1 -1
+;
+#X obj 118 7 bng 15 250 50 0 empty empty Jack\ reset 17 7 0 10 -261682
+-1 -1;
+#X text 11 33 shift+1;
+#X text 69 33 shift+2;
+#X text 126 33 shift+3;
+#X text 6 60 To turn off keyboard functions;
+#X text 6 83 Shift+<>?;
+#X text 7 105 You can also press the buttons;
+#X restore 79 99 pd keyboardhelp;
+#N canvas 136 23 475 300 neededpackages 0;
+#X text 462 108 Copy this into terminal;
+#X msg 195 144 l2orkistra!;
+#X text 271 144 type this into terminal \, this is the password;
+#X msg 195 28 to install xjadeo and qtractor;
+#X msg 195 182 y+enter;
+#X text 253 182 If prompted \, type this;
+#X msg 195 66 cntrl+alt+t;
+#X text 274 66 Brings up a terminal;
+#X text 401 66 (Don't worry \, it's not scary);
+#X msg 195 108 sudo apt-get install xjadeo qtractor ffmpeg;
+#X restore 178 99 pd neededpackages;
+#N canvas 853 483 374 71 note 0;
+#X text 7 7 Make sure that you start jack with a buffer size of at
+least 512 to handle video and audio \, or you will get crack/pops/stutters
+in the audio;
+#X restore 79 115 pd note;
+#N canvas 47 14 1062 149 filepull 0;
+#N canvas 339 427 1000 351 countoff 0;
+#X obj 6 249 outlet;
+#X obj 52 249 outlet;
+#X obj 98 249 outlet;
+#X obj 144 249 outlet;
+#X obj 190 249 outlet;
+#X obj 236 249 outlet;
+#X obj 282 249 outlet;
+#X obj 328 249 outlet;
+#X obj 374 249 outlet;
+#X obj 420 249 outlet;
+#X obj 466 249 outlet;
+#X obj 512 249 outlet;
+#X obj 558 249 outlet;
+#X obj 604 249 outlet;
+#X obj 650 249 outlet;
+#X obj 696 249 outlet;
+#X obj 742 249 outlet;
+#X obj 788 249 outlet;
+#X obj 834 249 outlet;
+#X obj 880 249 outlet;
+#X obj 926 249 outlet;
+#X obj 972 249 outlet;
+#X obj 1018 249 outlet;
+#X obj 1064 249 outlet;
+#X obj 1110 249 outlet;
+#X obj 1156 249 outlet;
+#X obj 38 -28 inlet;
+#X msg 38 18 1;
+#X obj 38 40 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#X obj 38 82 f;
+#X obj 38 104 + 1;
+#X obj 137 87 mod 26;
+#X floatatom 38 126 5 0 0 0 - - -, f 5;
+#X obj 38 59 metro 550;
+#X obj 129 23 sel 26;
+#X msg 129 45 0;
+#X msg 78 19 0;
+#X obj 38 -6 t b b;
+#X obj 5 191 route 1;
+#X obj 1 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 52 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 52 191 route 2;
+#X obj 103 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 99 191 route 3;
+#X obj 154 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 146 191 route 4;
+#X obj 205 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 256 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 307 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 358 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 193 191 route 5;
+#X obj 240 191 route 6;
+#X obj 287 191 route 7;
+#X obj 334 191 route 8;
+#X obj 409 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 460 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 511 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 562 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 613 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 664 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 715 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 766 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 381 191 route 9;
+#X obj 428 191 route 10;
+#X obj 481 191 route 11;
+#X obj 534 191 route 12;
+#X obj 587 191 route 13;
+#X obj 640 191 route 14;
+#X obj 693 191 route 15;
+#X obj 746 191 route 16;
+#X obj 817 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 868 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 919 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 970 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 1021 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 1072 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 1123 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 1174 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 799 191 route 17;
+#X obj 852 191 route 18;
+#X obj 905 191 route 19;
+#X obj 958 191 route 20;
+#X obj 1011 191 route 21;
+#X obj 1064 191 route 22;
+#X obj 1117 191 route 23;
+#X obj 1170 191 route 24;
+#X obj 1225 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 1276 217 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 1223 191 route 25;
+#X obj 1276 191 route 26;
+#X connect 26 0 37 0;
+#X connect 27 0 28 0;
+#X connect 28 0 33 0;
+#X connect 29 0 30 0;
+#X connect 30 0 31 0;
+#X connect 30 0 32 0;
+#X connect 31 0 29 1;
+#X connect 32 0 34 0;
+#X connect 32 0 38 0;
+#X connect 32 0 41 0;
+#X connect 32 0 89 0;
+#X connect 32 0 88 0;
+#X connect 32 0 85 0;
+#X connect 32 0 84 0;
+#X connect 32 0 83 0;
+#X connect 32 0 82 0;
+#X connect 32 0 81 0;
+#X connect 32 0 80 0;
+#X connect 32 0 79 0;
+#X connect 32 0 78 0;
+#X connect 32 0 69 0;
+#X connect 32 0 68 0;
+#X connect 32 0 67 0;
+#X connect 32 0 66 0;
+#X connect 32 0 65 0;
+#X connect 32 0 64 0;
+#X connect 32 0 63 0;
+#X connect 32 0 62 0;
+#X connect 32 0 53 0;
+#X connect 32 0 52 0;
+#X connect 32 0 51 0;
+#X connect 32 0 50 0;
+#X connect 32 0 45 0;
+#X connect 32 0 43 0;
+#X connect 33 0 29 0;
+#X connect 34 0 35 0;
+#X connect 35 0 28 0;
+#X connect 36 0 29 1;
+#X connect 37 0 27 0;
+#X connect 37 1 36 0;
+#X connect 38 0 39 0;
+#X connect 39 0 0 0;
+#X connect 40 0 1 0;
+#X connect 41 0 40 0;
+#X connect 42 0 2 0;
+#X connect 43 0 42 0;
+#X connect 44 0 3 0;
+#X connect 45 0 44 0;
+#X connect 46 0 4 0;
+#X connect 47 0 5 0;
+#X connect 48 0 6 0;
+#X connect 49 0 7 0;
+#X connect 50 0 46 0;
+#X connect 51 0 47 0;
+#X connect 52 0 48 0;
+#X connect 53 0 49 0;
+#X connect 54 0 8 0;
+#X connect 55 0 9 0;
+#X connect 56 0 10 0;
+#X connect 57 0 11 0;
+#X connect 58 0 12 0;
+#X connect 59 0 13 0;
+#X connect 60 0 14 0;
+#X connect 61 0 15 0;
+#X connect 62 0 54 0;
+#X connect 63 0 55 0;
+#X connect 64 0 56 0;
+#X connect 65 0 57 0;
+#X connect 66 0 58 0;
+#X connect 67 0 59 0;
+#X connect 68 0 60 0;
+#X connect 69 0 61 0;
+#X connect 70 0 16 0;
+#X connect 71 0 17 0;
+#X connect 72 0 18 0;
+#X connect 73 0 19 0;
+#X connect 74 0 20 0;
+#X connect 75 0 21 0;
+#X connect 76 0 22 0;
+#X connect 77 0 23 0;
+#X connect 78 0 70 0;
+#X connect 79 0 71 0;
+#X connect 80 0 72 0;
+#X connect 81 0 73 0;
+#X connect 82 0 74 0;
+#X connect 83 0 75 0;
+#X connect 84 0 76 0;
+#X connect 85 0 77 0;
+#X connect 86 0 24 0;
+#X connect 87 0 25 0;
+#X connect 88 0 86 0;
+#X connect 89 0 87 0;
+#X restore 6 223 pd countoff;
+#X obj -3 807 scpprotocol;
+#X obj 908 225 print scp;
+#X msg 4 147 10;
+#X msg 27 147 12;
+#X msg 50 147 14;
+#X msg 73 147 16;
+#X msg 96 147 18;
+#X msg 119 147 20;
+#X msg 142 147 22;
+#X msg 165 147 24;
+#X msg 188 147 26;
+#X msg 211 147 28;
+#X msg 234 147 30;
+#X msg 257 147 32;
+#X msg 280 147 34;
+#X msg 303 147 36;
+#X msg 326 147 38;
+#X msg 349 147 40;
+#X msg 372 147 42;
+#X msg 395 147 44;
+#X msg 418 147 46;
+#X msg 441 147 48;
+#X msg 464 147 50;
+#X msg 487 147 52;
+#X msg 510 147 54;
+#X msg 533 147 56;
+#X msg 556 147 58;
+#X msg 579 147 60;
+#X msg 696 145 62;
+#X msg 4 104 A;
+#X obj 4 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131 -1
+-262144;
+#X msg 27 104 B;
+#X obj 27 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131 -1
+-262144;
+#X msg 50 104 C;
+#X msg 73 104 D;
+#X msg 96 104 E;
+#X msg 119 104 F;
+#X msg 142 104 G;
+#X msg 165 104 H;
+#X msg 188 104 I;
+#X msg 211 104 J;
+#X msg 234 104 K;
+#X msg 257 104 L;
+#X msg 280 104 M;
+#X msg 303 104 N;
+#X msg 326 104 O;
+#X msg 349 104 P;
+#X msg 372 104 Q;
+#X msg 395 104 R;
+#X msg 418 104 S;
+#X msg 441 104 T;
+#X msg 464 104 U;
+#X msg 487 104 V;
+#X msg 510 104 W;
+#X msg 533 104 X;
+#X msg 556 104 Y;
+#X msg 579 104 Z;
+#X msg 696 102 Co;
+#X obj 50 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131 -1
+-262144;
+#X obj 73 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131 -1
+-262144;
+#X obj 96 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131 -1
+-262144;
+#X obj 119 125 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 142 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 165 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 188 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 211 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 234 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 257 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 280 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 303 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 326 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 349 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 372 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 395 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 418 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 441 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 464 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 487 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 510 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 533 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 556 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 579 126 bng 15 250 50 0 empty empty empty 17 7 0 10 -262131
+-1 -262144;
+#X obj 696 125 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 20 830 scpprotocol;
+#X obj 44 851 scpprotocol;
+#X obj 65 869 scpprotocol;
+#X obj 87 890 scpprotocol;
+#X obj 114 913 scpprotocol;
+#X obj 141 941 scpprotocol;
+#X obj 163 967 scpprotocol;
+#X obj 187 989 scpprotocol;
+#X obj 209 1016 scpprotocol;
+#X obj 239 1036 scpprotocol;
+#X obj 254 1080 scpprotocol;
+#X obj 267 1123 scpprotocol;
+#X obj 304 1155 scpprotocol;
+#X obj 324 1181 scpprotocol;
+#X obj 341 1224 scpprotocol;
+#X obj 362 1253 scpprotocol;
+#X obj 378 1285 scpprotocol;
+#X obj 403 1307 scpprotocol;
+#X obj 426 1342 scpprotocol;
+#X obj 446 1363 scpprotocol;
+#X obj 470 1388 scpprotocol;
+#X obj 497 1417 scpprotocol;
+#X obj 533 1127 scpprotocol;
+#X obj 554 1155 scpprotocol;
+#X obj 579 1187 scpprotocol;
+#X obj 631 829 scpprotocol;
+#X obj 908 203 tgl 15 0 empty empty debug\ (look\ at\ log) 17 7 0 10
+-262144 -1 -1 0 1;
+#X obj 4 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 26 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 51 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 73 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 96 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 119 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 142 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 165 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 188 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 211 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 234 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 257 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 280 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 303 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 326 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 349 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 372 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 395 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 418 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 441 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 464 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 487 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 510 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 533 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 556 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 579 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -24198 -1
+-262144;
+#X obj 697 168 bng 15 250 50 0 empty empty empty 17 7 0 10 -4034 -1
+-1;
+#X text 746 102 Station;
+#X text 746 146 IP;
+#X obj 2 188 cnv 15 888 1254 empty empty guts\ -\ Eye\ shield\ (look\ at\ own\ risk)
+6 7 0 14 -99865 -262130 0;
+#X text 746 124 Pull recording folder;
+#X text 747 166 Finished;
+#X obj 610 105 bng 15 250 50 0 empty empty Pull\ all 17 7 0 10 -262131
+-1 -1;
+#X connect 0 0 31 0;
+#X connect 0 1 33 0;
+#X connect 0 2 59 0;
+#X connect 0 3 60 0;
+#X connect 0 4 61 0;
+#X connect 0 5 62 0;
+#X connect 0 6 63 0;
+#X connect 0 7 64 0;
+#X connect 0 8 65 0;
+#X connect 0 9 66 0;
+#X connect 0 10 67 0;
+#X connect 0 11 68 0;
+#X connect 0 12 69 0;
+#X connect 0 13 70 0;
+#X connect 0 14 71 0;
+#X connect 0 15 72 0;
+#X connect 0 16 73 0;
+#X connect 0 17 74 0;
+#X connect 0 18 75 0;
+#X connect 0 19 76 0;
+#X connect 0 20 77 0;
+#X connect 0 21 78 0;
+#X connect 0 22 79 0;
+#X connect 0 23 80 0;
+#X connect 0 24 81 0;
+#X connect 0 25 82 0;
+#X connect 1 0 111 0;
+#X connect 1 1 2 0;
+#X connect 3 0 1 0;
+#X connect 4 0 84 0;
+#X connect 5 0 85 0;
+#X connect 6 0 86 0;
+#X connect 7 0 87 0;
+#X connect 8 0 88 0;
+#X connect 9 0 89 0;
+#X connect 10 0 90 0;
+#X connect 11 0 91 0;
+#X connect 12 0 92 0;
+#X connect 13 0 93 0;
+#X connect 14 0 94 0;
+#X connect 15 0 95 0;
+#X connect 16 0 96 0;
+#X connect 17 0 97 0;
+#X connect 18 0 98 0;
+#X connect 19 0 99 0;
+#X connect 20 0 100 0;
+#X connect 21 0 101 0;
+#X connect 22 0 102 0;
+#X connect 23 0 103 0;
+#X connect 24 0 104 0;
+#X connect 25 0 105 0;
+#X connect 26 0 106 0;
+#X connect 27 0 107 0;
+#X connect 28 0 108 0;
+#X connect 29 0 109 0;
+#X connect 30 0 31 0;
+#X connect 31 0 3 0;
+#X connect 32 0 33 0;
+#X connect 33 0 4 0;
+#X connect 34 0 59 0;
+#X connect 35 0 60 0;
+#X connect 36 0 61 0;
+#X connect 37 0 62 0;
+#X connect 38 0 63 0;
+#X connect 39 0 64 0;
+#X connect 40 0 65 0;
+#X connect 41 0 66 0;
+#X connect 42 0 67 0;
+#X connect 43 0 68 0;
+#X connect 44 0 69 0;
+#X connect 45 0 70 0;
+#X connect 46 0 71 0;
+#X connect 47 0 72 0;
+#X connect 48 0 73 0;
+#X connect 49 0 74 0;
+#X connect 50 0 75 0;
+#X connect 51 0 76 0;
+#X connect 52 0 77 0;
+#X connect 53 0 78 0;
+#X connect 54 0 79 0;
+#X connect 55 0 80 0;
+#X connect 56 0 81 0;
+#X connect 57 0 82 0;
+#X connect 58 0 83 0;
+#X connect 59 0 5 0;
+#X connect 60 0 6 0;
+#X connect 61 0 7 0;
+#X connect 62 0 8 0;
+#X connect 63 0 9 0;
+#X connect 64 0 10 0;
+#X connect 65 0 11 0;
+#X connect 66 0 12 0;
+#X connect 67 0 13 0;
+#X connect 68 0 14 0;
+#X connect 69 0 15 0;
+#X connect 70 0 16 0;
+#X connect 71 0 17 0;
+#X connect 72 0 18 0;
+#X connect 73 0 19 0;
+#X connect 74 0 20 0;
+#X connect 75 0 21 0;
+#X connect 76 0 22 0;
+#X connect 77 0 23 0;
+#X connect 78 0 24 0;
+#X connect 79 0 25 0;
+#X connect 80 0 26 0;
+#X connect 81 0 27 0;
+#X connect 82 0 28 0;
+#X connect 83 0 29 0;
+#X connect 84 0 112 0;
+#X connect 84 1 2 0;
+#X connect 85 0 113 0;
+#X connect 85 1 2 0;
+#X connect 86 0 114 0;
+#X connect 86 1 2 0;
+#X connect 87 0 115 0;
+#X connect 87 1 2 0;
+#X connect 88 0 116 0;
+#X connect 88 1 2 0;
+#X connect 89 0 117 0;
+#X connect 89 1 2 0;
+#X connect 90 0 118 0;
+#X connect 90 1 2 0;
+#X connect 91 0 119 0;
+#X connect 91 1 2 0;
+#X connect 92 0 120 0;
+#X connect 92 1 2 0;
+#X connect 93 0 121 0;
+#X connect 93 1 2 0;
+#X connect 94 0 122 0;
+#X connect 94 1 2 0;
+#X connect 95 0 123 0;
+#X connect 95 1 2 0;
+#X connect 96 0 124 0;
+#X connect 96 1 2 0;
+#X connect 97 0 125 0;
+#X connect 97 1 2 0;
+#X connect 98 0 126 0;
+#X connect 98 1 2 0;
+#X connect 99 0 127 0;
+#X connect 99 1 2 0;
+#X connect 100 0 128 0;
+#X connect 100 1 2 0;
+#X connect 101 0 129 0;
+#X connect 101 1 2 0;
+#X connect 102 0 130 0;
+#X connect 102 1 2 0;
+#X connect 103 0 131 0;
+#X connect 103 1 2 0;
+#X connect 104 0 132 0;
+#X connect 104 1 2 0;
+#X connect 105 0 133 0;
+#X connect 105 1 2 0;
+#X connect 106 0 134 0;
+#X connect 106 1 2 0;
+#X connect 107 0 135 0;
+#X connect 107 1 2 0;
+#X connect 108 0 136 0;
+#X connect 108 1 2 0;
+#X connect 109 0 137 0;
+#X connect 109 1 2 0;
+#X connect 110 0 1 1;
+#X connect 110 0 106 1;
+#X connect 110 0 84 1;
+#X connect 110 0 108 1;
+#X connect 110 0 107 1;
+#X connect 110 0 105 1;
+#X connect 110 0 104 1;
+#X connect 110 0 103 1;
+#X connect 110 0 102 1;
+#X connect 110 0 101 1;
+#X connect 110 0 100 1;
+#X connect 110 0 99 1;
+#X connect 110 0 98 1;
+#X connect 110 0 97 1;
+#X connect 110 0 96 1;
+#X connect 110 0 95 1;
+#X connect 110 0 94 1;
+#X connect 110 0 93 1;
+#X connect 110 0 92 1;
+#X connect 110 0 91 1;
+#X connect 110 0 90 1;
+#X connect 110 0 89 1;
+#X connect 110 0 88 1;
+#X connect 110 0 87 1;
+#X connect 110 0 86 1;
+#X connect 110 0 85 1;
+#X connect 110 0 109 1;
+#X connect 143 0 0 0;
+#X restore 79 132 pd filepull;
+#X text 78 152 Key 5 = VibrateKey Shift+5 = Long Vibrate;
+#X text 78 179 Updated last 11-27-2018;
+#X restore 150 210 pd transportwindow;
+#X obj 230 123 nbx 3 13 0 99999 0 0 performergainsend performeraudiogaingui
+Audio\ Gain\ % -64 7 0 9 -204786 -1 -1 0 256 0;

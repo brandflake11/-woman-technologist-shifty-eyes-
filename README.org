@@ -1,0 +1,122 @@
+* What is in this Repository
+
+This repository is a backup of the code of Dan Tramte's [[https://youtu.be/8WWrGLy7Z30][:woman-technologist: :shifty-eyes:]], a piece performed by the [[http://l2ork.music.vt.edu/main/][Linux Laptop Orchestra (L2ork)]]. Most of the code was implemented by Brandon Hale, while collaborating with Dan Tramte. The composition and piece idea was written and created by Dan Tramte.
+
+* Requirements
+
+This piece needs a couple of dependencies in order to function: 
+
++--------+-----------+
+|pd-l2ork|A version  |
+|        |of pd-l2ork|
+|        |is required|
+|        |to run the |
+|        |patch. The |
+|        |version    |
+|        |used to    |
+|        |make the   |
+|        |patch was  |
+|        |pd-l2ork   |
+|        |1.0 for    |
+|        |Ubuntu     |
+|        |Linux      |
+|        |16.04.     |
++--------+-----------+
+|qtractor|This is    |
+|        |used for   |
+|        |remembering|
+|        |some jack  |
+|        |routing and|
+|        |playing    |
+|        |back the   |
+|        |audio from |
+|        |the        |
+|        |conductor  |
+|        |machine.   |
++--------+-----------+
+|xjadeo  |This is the|
+|        |program to |
+|        |play the   |
+|        |graphic    |
+|        |score, in  |
+|        |vdieo      |
+|        |format.    |
++--------+-----------+
+|ffmpeg  |ffmpeg is  |
+|        |not        |
+|        |necessarily|
+|        |required,  |
+|        |but good to|
+|        |hvae for   |
+|        |reencoding |
+|        |the video  |
+|        |score, if  |
+|        |needed.    |
++--------+-----------+
+
+You will also need the other dependencies these packages need.
+
+The .deb files for Ubuntu 16.04 for these dependencies, except for pd-l2ork, is included in this repository. Their respective copyright applies to them and we do not own these .deb files. They were a part of the original L2ork backup, so have been included. 
+
+The laptops also need to run at 48khz sampling rate, as the backing track and qtractor project file that leads the ensemble runs at 48khz. If needed, you can down or upsample the backing track and remake the qtractor project file to play the piece at a different sampling rate.
+
+* Navigating the Files
+
+The files have been left untouched from when they were used in L2ork. The code was made in pd-l2ork 1.0 on Ubuntu Linux 16.04. It is necessary to use pd-l2ork on Linux, as it is the only operating system that supports [disis_wiimote], the object used for Wiimote support. Here is an overview of the main files:
+
++------------------+--------------+
+|tramteconductor.pd|Conductor     |
+|                  |patch, to     |
+|                  |run on the    |
+|                  |main          |
+|                  |conductor     |
+|                  |computer.     |
++------------------+--------------+
+|tramte_lork.pd    |Performer     |
+|                  |patch, run    |
+|                  |by            |
+|                  |everyone      |
+|                  |else in       |
+|                  |the           |
+|                  |ensemble.     |
++------------------+--------------+
+|tramte_rapper.pd  |Rapper patch, |
+|                  |used only by  |
+|                  |the rappers in|
+|                  |the piece.    |
+|                  |              |
+|                  |              |
+|                  |              |
++------------------+--------------+
+
+A conductor, performer, or rapper only needs to open their main patch. The patch will load any sub-patches that is needed. 
+
+The video score used for the patch is [[./Works/Tramte/tramte-ioii/tramte_small.mp4]]. A higher resolution version is also included: [[./Works/Tramte/tramte-ioii/wiicontrol-test-7.mov]]. The patch doesn't use this version though, as it takes *much longer* to load it into xjadeo in a performance setting.
+
+* Minimizing Feedback
+
+For the conductor patch, some jack routing is used:
+
+pd-l2ork -> opens qtractor
+
+qtractor conductor audio file plays through -> pd-l2ork audio input -> and output to speakers
+
+This routing was used to help make it easier to control the audio file. The conductor can stay in pd-l2ork instead of having to manage qtractor as well. When you load the qtractor project file, all of the jack routing needed will be automatically loaded. There is one problem with this though: sometimes, your laptop mic is automatically routed with jack. In order to avoid feedback with this, you should turn down the laptop mic to 0% in alsamixer. [[./Works/Tramte/tramte-ioii/alsacontrols]] is an included script that can automatically apply this change. It was made for the L2ork laptops, so you will have to adjust it to fit your soundcard.
+
+[[./Works/Tramte/tramte-ioii/tramte_rapper.pd]] also can have feedback issues, as it uses mic input to process and output the rapper vocals. Make sure to use a directional mic and face away from the speakers you use.
+
+* How Do the Computers Stay in Sync?
+
+The computers for the laptop ensemble are kept in sync mostly with jack transport. The conductor patch sends messages to the other computers in the ensemble over the wired L2ork network. This controls the position of jack transport on all of the computers. xjadeo is used in combination with jack transport to show the video score. In theory, if all of the computers get all of the messages at the same time, then they will be in sync. At least, this was the idea when developing the patch. It may not work so well with an ensemble of different laptops and usb audio interfaces.
+
+* What if the Rappers Need to Hear the Backing Track?
+
+The infrastructure is ready for this occasion. You can load tramte_rapper.pd and tramteconductor.pd at the same time. Just load tramte_rapper.pd and get this setup first, before loading the tramteconductor.pd to load the music. You can then play the backing track through a headphones output on the rapper's laptop so they can hear the backing track. Because qtractor can be synced with jack transport, their backing track will also follow the conductor's laptop, keeping them in sync with the ensemble.
+
+* I Have Some Questions about the Infrastructure or Piece
+
+If you have any questions about the piece's infrastructure, please contact Brandon Hale at [[bthale.com]]. If you have questions about the composition of the piece, contact Dan Tramte at [[https://www.datramt.cool/home]].
+
+* Copyright
+
+Everything in this repository, except for the Ubuntu .deb files, are licensed under the GPLv3. Please see the LICENSE file included. We take no liability for any damage or otherwise adverse effects the files in this repository has on you. If you use anything in this repository, please credit Brandon Hale and Dan Tramte and include the LICENSE file.

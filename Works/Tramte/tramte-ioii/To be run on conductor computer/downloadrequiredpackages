@@ -1,0 +1,6 @@
+#!/bin/bash
+
+apt-get update
+apt download xjadeo ffmpeg qtractor
+
+echo "Done"
