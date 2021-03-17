@@ -29,7 +29,7 @@ The files have been left untouched from when they were used in L2ork. The code w
 
 A conductor, performer, or rapper only needs to open their main patch. The patch will load any sub-patches that is needed. 
 
-The video score used for the patch is [[./Works/Tramte/tramte-ioii/tramte_small.mp4]]. A higher resolution version is also included: [[./Works/Tramte/tramte-ioii/wiicontrol-test-7.mov]]. The patch doesn't use this version though, as it takes *much longer* to load it into xjadeo in a performance setting.
+The video score used for the patch is [[./Works/Tramte/tramte-ioii/tramte_small.mp4]]. A higher resolution version is _not included_, as it is over github's file size limit: [[./Works/Tramte/tramte-ioii/wiicontrol-test-7.mov]]. This is the only file missing from the original L2ork files. The patch doesn't use this version though, as it takes *much longer* to load it into xjadeo in a performance setting.
 
 * Minimizing Feedback
 
